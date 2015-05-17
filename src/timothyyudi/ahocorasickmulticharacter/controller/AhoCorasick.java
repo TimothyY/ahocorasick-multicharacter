@@ -18,28 +18,74 @@ public class AhoCorasick {
 	String tempOutputStr = "";
 	String reversedTempOutputStr = "";
 	HashMap<String, Output> outputMap = new HashMap<>();
+	int columnNumberCounter;
+	String bufferStr0, bufferStr1;
+	long ahoCorasickTimeTotal=0;
+	long ahoCorasickTimeFragment=0;
+	long algoStart, algoEnd;
+	
+//	/**A function to match input string against constructed AhoCorasick trie*/
+//	public void nPatternMatching(String inputString){
+//		currState = root;
+//		lineNumberCounter=1;
+//		for (int i = 0; i < inputString.length(); i++) { //as long as there is an input
+//			if(inputString.charAt(i)=='\n')lineNumberCounter++;
+//			while (goTo(currState, Character.toString(inputString.charAt(i)))==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
+//				currState= failFrom(currState);
+//			}
+//			if(goTo(currState, Character.toString(inputString.charAt(i)))!=null){
+//				currState = goTo(currState, Character.toString(inputString.charAt(i))); //set the current node to the result of go to function
+//				prepareOutput(currState,lineNumberCounter, i);
+//			}
+//		}
+//	}
 	
 	/**A function to match input string against constructed AhoCorasick trie*/
 	public void nPatternMatching(String inputString){
 		currState = root;
 		lineNumberCounter=1;
-		for (int i = 0; i < inputString.length(); i++) { //as long as there is an input
-			if(inputString.charAt(i)=='\n')lineNumberCounter++;
-			while (goTo(currState, Character.toString(inputString.charAt(i)))==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
-				currState= failFrom(currState);
+		columnNumberCounter=0;
+		String inputStringBuffer="";
+		int inputStringLength = inputString.length();
+		int inputStringLastPosition = inputStringLength -1;
+		
+		for (int i = 0; i < inputStringLength; i++) { //as long as there is an input
+			
+			columnNumberCounter++;
+			if(inputString.charAt(i)=='\n'){
+				lineNumberCounter++;
+				columnNumberCounter=1;
 			}
-			if(goTo(currState, Character.toString(inputString.charAt(i)))!=null){
-				currState = goTo(currState, Character.toString(inputString.charAt(i))); //set the current node to the result of go to function
-				prepareOutput(currState,lineNumberCounter, i);
+			
+			inputStringBuffer = inputStringBuffer + inputString.charAt(i);
+			
+			if(inputStringBuffer.length()==2 || i==inputStringLastPosition){
+				
+				algoStart=System.currentTimeMillis();
+				
+				while (goTo(currState, inputStringBuffer)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
+					currState= failFrom(currState);
+				}
+				if(goTo(currState, inputStringBuffer)!=null){
+					currState = goTo(currState, inputStringBuffer); //set the current node to the result of go to function
+					prepareOutput(currState, lineNumberCounter, columnNumberCounter);
+				}
+				
+				//apakah butuh shiftExtend?
+				algoEnd=System.currentTimeMillis();
+				ahoCorasickTimeFragment=algoEnd-algoStart;
+				ahoCorasickTimeTotal+=ahoCorasickTimeFragment;
+				
+				//do some xploration and search
+				inputStringBuffer = ""; //reset buffer
 			}
+
 		}
+		
+		writeAhoCorasickTime(ahoCorasickTimeTotal);
 	}
 	
 	/**A function to move from 1 node of a trie to the others based on next input character*/
-	/*
-	private State goTo(State node, String nextInputChar){	//[deprecated]
-		return node.getNextStateCollection().get(Character.toString(nextInputChar));
-	}*/
 	private State goTo(State node, String nextInputChar){
 		return node.getNextStateCollection().get(nextInputChar);
 	}
@@ -215,11 +261,14 @@ public class AhoCorasick {
 	 * @throws UnsupportedEncodingException 
 	 * @throws FileNotFoundException */
 	public void writeOutput() throws FileNotFoundException, UnsupportedEncodingException{
-		PrintWriter writer = new PrintWriter("c:/temp/AhoCorasickHashMapOutput.txt", "UTF-8");
+		PrintWriter writer = new PrintWriter("src/timothyyudi/ahocorasick/asset/AhoCorasickOutput.txt", "UTF-8");
 		for (Output output : outputMap.values()) {
 			writer.println("Found "+output.getOutputString()+" @line: "+output.getLineNumber()+"("+output.getOutputStartPoint()+"-"+output.getOutputEndPoint()+")");
 		}
 		writer.close();
 	}
 	
+	public void writeAhoCorasickTime(long ahoCorasickTime){
+		System.out.println("[TRUE] AhoCorasick Time: "+ahoCorasickTime+" ms");
+	}
 }

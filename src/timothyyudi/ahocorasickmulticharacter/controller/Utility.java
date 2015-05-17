@@ -3,6 +3,7 @@ package timothyyudi.ahocorasickmulticharacter.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,16 +13,16 @@ import java.util.Scanner;
 public class Utility {
 
 	/**read keyword file from snort rules*/
-	public ArrayList<String> readKeyword(String keywordFilePath){
+	public ArrayList<String> readKeyword(File f){
 		Scanner scanner;
 		ArrayList<String> list = new ArrayList<String>();
 		String temp;
 		int firstQuotes=0, secondQuotes=0, thirdQuotes=0, fourthQuotes=0;
 		try {
-			scanner = new Scanner(new File(keywordFilePath));
+			scanner = new Scanner(f);
 			
 			while (scanner.hasNext()){
-				list.add(scanner.next().trim()); //ambil per spasi.*/
+				list.add(scanner.next().trim()); //ambil per spasi.
 			/*while (scanner.hasNextLine()){
 			    temp = scanner.nextLine();
 			    firstQuotes=temp.indexOf("\"")+1;
@@ -43,8 +44,11 @@ public class Utility {
 	}
 	
 	/**Read input string file as inputString*/
-	public String readInputString(String path, Charset encoding) throws IOException {
-		byte[] encoded = Files.readAllBytes(Paths.get(path));
+	public String readInputString(File f, Charset encoding) throws IOException {
+//		byte[] encoded = Files.readAllBytes(Paths.get(f));
+		RandomAccessFile rf = new RandomAccessFile(f, "r");
+		byte[] encoded = new byte[(int)rf.length()];
+		rf.read(encoded);
 		return new String(encoded, encoding).toLowerCase();
 	}
 	

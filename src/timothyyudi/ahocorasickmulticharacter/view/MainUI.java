@@ -1,5 +1,6 @@
 package timothyyudi.ahocorasickmulticharacter.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -19,8 +20,11 @@ public class MainUI {
 		
 		ArrayList<String> keywords = new ArrayList<String>(); //prepare keywords
 		try {
-			//keywords = util.readKeyword("c:/temp/snortrules.txt"); //load keywords from file
-			keywords = util.readKeyword("c:/temp/kjvkeyword_simple.txt"); //load keywords from file
+//			keywords = util.readKeyword("c:/temp/snortrules.txt"); //load keywords from file
+//			keywords = util.readKeyword("c:/temp/kjvkeyword_simple.txt"); //load keywords from file
+			File f = new File("src/timothyyudi/ahocorasick/asset/kjvkeyword_simple.txt");
+			keywords = util.readKeyword(f); //load keywords from file
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -39,18 +43,20 @@ public class MainUI {
 		
 		String inputString="";	//prepare input string
 		try {
-			//inputString = util.readInputString("c:/temp/inputString2.txt", Charset.defaultCharset()); //load input string from file
-			inputString = util.readInputString("c:/temp/kjv.txt", Charset.defaultCharset()); //load input string from file
+//			inputString = util.readInputString("c:/temp/inputString2.txt", Charset.defaultCharset()); //load input string from file
+//			inputString = util.readInputString("c:/temp/kjv.txt", Charset.defaultCharset()); //load input string from file
+			File f = new File("src/timothyyudi/ahocorasick/asset/kjv.txt");
+			inputString = util.readInputString(f, Charset.defaultCharset());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		System.out.print("Input n for n-multi character Aho Corasick: ");
-		scanner = new Scanner(System.in);
-		int n = scanner.nextInt();
-		scanner.close();
-		if(n<1)n=1;
-		
+//		System.out.print("Input n for n-multi character Aho Corasick: ");
+//		scanner = new Scanner(System.in);
+//		int n = scanner.nextInt();
+//		scanner.close();
+//		if(n<1)n=1;
+		int n=2; //force 2 multichar
 		System.out.println("Creating "+n+"-multi character trie");
 		timer=System.currentTimeMillis();
 		ahoCorasick.prepareNTrie(n);
