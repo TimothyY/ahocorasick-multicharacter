@@ -1,34 +1,33 @@
 package timothyyudi.ahocorasickmulticharacter.model;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class State {
 
-	//char stateContentCharacter;
 	String stateContentCharacter;
-	boolean fullWord;
+	String fullKeyword;
 	State parent, failState;
 	HashMap<String, State> nextStateCollection;
 	
 	/**Called when root is created.*/
 	public State(){
 		super();
-		//this.stateContentCharacter = '\u0000';
+		this.parent = null;
 		this.stateContentCharacter = null;
-		this.fullWord = false;
-		this.parent = this;
-		this.nextStateCollection = new HashMap<String, State>();
-		this.failState = this;
+		this.failState = null;
+		this.fullKeyword = null;
+		this.nextStateCollection = new HashMap<>();
 	}
-	
+
 	/**Called each time a new state is created*/
 	public State(State parent, String stateContentCharacter, State failState){
 		super();
-		this.stateContentCharacter = stateContentCharacter;
-		this.fullWord = false;
 		this.parent = parent;
-		this.nextStateCollection = new HashMap<String, State>();
+		this.stateContentCharacter = stateContentCharacter;
 		this.failState = failState;
+		this.fullKeyword = null;
+		this.nextStateCollection = new HashMap<>();
 	}
 
 	public String getStateContentCharacter() {
@@ -39,12 +38,12 @@ public class State {
 		this.stateContentCharacter = stateContentCharacter;
 	}
 
-	public boolean isFullWord() {
-		return fullWord;
+	public String getFullKeyword() {
+		return fullKeyword;
 	}
 
-	public void setFullWord(boolean fullWord) {
-		this.fullWord = fullWord;
+	public void setFullKeyword(String fullKeyword) {
+		this.fullKeyword = fullKeyword;
 	}
 
 	public State getParent() {
@@ -70,5 +69,5 @@ public class State {
 	public void setNextStateCollection(HashMap<String, State> nextStateCollection) {
 		this.nextStateCollection = nextStateCollection;
 	}
-
+		
 }

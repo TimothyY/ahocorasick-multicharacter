@@ -3,12 +3,17 @@ package timothyyudi.ahocorasickmulticharacter.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
+
+import timothyyudi.ahocorasickmulticharacter.model.Output;
 
 public class Utility {
 
@@ -21,19 +26,19 @@ public class Utility {
 		try {
 			scanner = new Scanner(f);
 			
-			while (scanner.hasNext()){
-				list.add(scanner.next().trim()); //ambil per spasi.
-			/*while (scanner.hasNextLine()){
+//			while (scanner.hasNext()){
+//				list.add(scanner.next().trim()); //ambil per spasi.
+			while (scanner.hasNextLine()){
 			    temp = scanner.nextLine();
 			    firstQuotes=temp.indexOf("\"")+1;
-			    secondQuotes=temp.indexOf("\"", firstQuotes); //to be used on snort rules message [TEMP]
-			    //secondQuotes=temp.indexOf("\"", firstQuotes)+1; //to be used in snort rules content
+//			    secondQuotes=temp.indexOf("\"", firstQuotes); //to be used on snort rules message [TEMP]
+			    secondQuotes=temp.indexOf("\"", firstQuotes)+1; //to be used in snort rules content
 			    thirdQuotes=temp.indexOf("\"", secondQuotes)+1;
 			    fourthQuotes=temp.indexOf("\"", thirdQuotes);
 			    if(firstQuotes!=0){
-			    	list.add(temp.substring(firstQuotes, secondQuotes).trim()); //to be used on snort rules message [TEMP]
-			    	//list.add(temp.substring(thirdQuotes, fourthQuotes).trim()); //to be used in snort rules content
-			    }*/
+//			    	list.add(temp.substring(firstQuotes, secondQuotes).trim()); //to be used on snort rules message [TEMP]
+			    	list.add(temp.substring(thirdQuotes, fourthQuotes).trim()); //to be used in snort rules content
+			    }
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
@@ -50,6 +55,21 @@ public class Utility {
 		byte[] encoded = new byte[(int)rf.length()];
 		rf.read(encoded);
 		return new String(encoded, encoding).toLowerCase();
+	}
+	
+	/**Write output to output.txt
+	 * @throws UnsupportedEncodingException 
+	 * @throws FileNotFoundException */
+	public void writeOutput(ArrayList<Output> outputList) throws FileNotFoundException, UnsupportedEncodingException{
+		PrintWriter writer = new PrintWriter("src/timothyyudi/ahocorasick/asset/AhoCorasickOutput.txt", "UTF-8");
+		for (Output output : outputList) {
+			writer.println("Found "+output.getOutputString()+" @line: "+output.getLineNumber()+"("+output.getOutputStartPoint()+"-"+output.getOutputEndPoint()+")");
+		}
+		writer.close();
+	}
+	
+	public void writeAhoCorasickTime(long ahoCorasickTime){
+		System.out.println("[TRUE] AhoCorasick Time: "+ahoCorasickTime+" ms");
 	}
 	
 }
