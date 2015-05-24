@@ -23,7 +23,8 @@ public class MainUI {
 //			keywords = util.readKeyword("c:/temp/snortrules.txt"); //load keywords from file
 //			keywords = util.readKeyword("c:/temp/kjvkeyword_simple.txt"); //load keywords from file
 //			File f = new File("src/timothyyudi/ahocorasick/asset/kjvkeyword_simple.txt");
-			File f = new File("src/timothyyudi/ahocorasick/asset/snortrules.txt");
+//			File f = new File("src/timothyyudi/ahocorasick/asset/snortrules.txt");
+			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword.txt");
 			keywords = util.readKeyword(f); //load keywords from file
 			
 		} catch (Exception e) {
