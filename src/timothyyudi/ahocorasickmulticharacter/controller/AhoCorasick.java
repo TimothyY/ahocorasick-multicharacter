@@ -23,6 +23,8 @@ public class AhoCorasick {
 	long ahoCorasickTimeFragment=0;
 	long algoStart, algoEnd;
 	
+	String inputString;
+	
 	/**A function to move from 1 node of a trie to the others based on next input character*/
 	private State goTo(State node, String nextInputChar){
 		return node.getNextStateCollection().get(nextInputChar);
@@ -153,9 +155,12 @@ public class AhoCorasick {
 	
 	/**A function to match input string against constructed AhoCorasick trie*/
 	public void nPatternMatching(String inputString){
+		
+		this.inputString = inputString;
+		
 		currState = root;
 		lineNumberCounter=1;
-		columnNumberCounter=0;
+		columnNumberCounter=1;
 		String inputStringBuffer="";
 		int inputStringLength = inputString.length();
 		int inputStringLastPosition = inputStringLength -1;
@@ -211,13 +216,19 @@ public class AhoCorasick {
 	/**prepare output for the matching keywords found*/
 	private void prepareOutput(State state,int lineNumber, int endColumnNumber){
 		if(state.getFullKeyword()!=null){//jika currNode = fullword
-			outputList.add(new Output(state.getFullKeyword(), lineNumber, endColumnNumber-(state.getFullKeyword().length()), endColumnNumber));
+			if(inputString.substring(endColumnNumber-1-(state.getFullKeyword().length()), endColumnNumber-1).compareToIgnoreCase(state.getFullKeyword())!=0){
+				endColumnNumber--;
+			}
+			outputList.add(new Output(state.getFullKeyword(), lineNumber, endColumnNumber-(state.getFullKeyword().length()), endColumnNumber-1));
 		}
 		
 		while(!failFrom(state).equals(root)){//jika state tersebut punya fail node yang bukan root
 			state = failFrom(state);
 			if(state.getFullKeyword()!=null){//jika failState == fullword
-				outputList.add(new Output(state.getFullKeyword(), lineNumber, endColumnNumber-(state.getFullKeyword().length()), endColumnNumber));
+				if(inputString.substring(endColumnNumber-1-(state.getFullKeyword().length()), endColumnNumber-1).compareToIgnoreCase(state.getFullKeyword())!=0){
+					endColumnNumber--;
+				}
+				outputList.add(new Output(state.getFullKeyword(), lineNumber, endColumnNumber-(state.getFullKeyword().length()), endColumnNumber-1));
 			}
 		}
 	}
