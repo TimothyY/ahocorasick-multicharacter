@@ -16,8 +16,10 @@ public class AhoCorasick {
 	static boolean isCaseSensitive = false;
 	String bufferStr0, bufferStr1;
 	
+	
+	
+	
 	public static ArrayList<Output> outputList = new ArrayList<>();
-	HashMap<String, Output> outputMap = new HashMap<>();
 	
 	long ahoCorasickTimeTotal=0;
 	long ahoCorasickTimeFragment=0;
