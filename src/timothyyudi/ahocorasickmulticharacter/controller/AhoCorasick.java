@@ -33,10 +33,19 @@ public class AhoCorasick {
 	}
 	
 	/**A function to move from 1 node of a trie to the others based on next input character*/
-	private State goToMatch(State node, String nextInputChar, String firstNextInputChar){
+//	private State goToMatch(State node, String nextInputChar, String firstNextInputChar){
+	private State goToMatch(State node, String nextInputChar, String firstNextInputChar, String secondNextInputChar){
 		State destState=node.getNextStateCollection().get(nextInputChar);
 		if(destState==null){
 			destState=node.getNextStateCollection().get(firstNextInputChar);
+			if(destState!=null){
+				if(destState.getFullKeyword()==null){
+					destState=null;
+				}	
+			}
+		}		
+		if(destState==null){
+			destState=node.getNextStateCollection().get(secondNextInputChar);
 		}
 		return destState;
 	}
@@ -184,17 +193,17 @@ public class AhoCorasick {
 				
 				bufferStr0 = ""+inputStringBuffer.charAt(0);
 				
-				while (goToMatch(currState, inputStringBuffer, bufferStr0)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
+				while (goToMatch(currState, inputStringBuffer, bufferStr0, bufferStr1)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
 					currState= failFrom(currState);
 				}
-				if(goToMatch(currState, inputStringBuffer, bufferStr0)!=null){
-					currState = goToMatch(currState, inputStringBuffer, bufferStr0); //set the current node to the result of go to function
-					System.out.println("Matching "+inputStringBuffer+" & Gone to "+currState.getStateContentCharacter());
+				if(goToMatch(currState, inputStringBuffer, bufferStr0, bufferStr1)!=null){
+					currState = goToMatch(currState, inputStringBuffer, bufferStr0, bufferStr1); //set the current node to the result of go to function
+//					System.out.println("Matching "+inputStringBuffer+" & Gone to "+currState.getStateContentCharacter());
 					prepareOutput(currState, lineNumberCounter, columnNumberCounter);
 				}
-				else {
-					shiftToExtTrie(currState, bufferStr1);
-				}
+//				else {
+//					shiftToExtTrie(currState, bufferStr1);
+//				}
 				
 				//apakah butuh shiftExtend?
 				algoEnd=System.currentTimeMillis();

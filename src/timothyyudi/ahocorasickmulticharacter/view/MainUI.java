@@ -48,8 +48,8 @@ public class MainUI {
 		try {
 //			inputString = util.readInputString("c:/temp/inputString2.txt", Charset.defaultCharset()); //load input string from file
 //			inputString = util.readInputString("c:/temp/kjv.txt", Charset.defaultCharset()); //load input string from file
-//			File f = new File("src/timothyyudi/ahocorasick/asset/kjv.txt");
-			File f = new File("src/timothyyudi/ahocorasick/asset/kjv_bug.txt");			
+			File f = new File("src/timothyyudi/ahocorasick/asset/kjv.txt");
+//			File f = new File("src/timothyyudi/ahocorasick/asset/kjv_bug.txt");			
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortrulesInputFile.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/SimpleInputString.txt");
 			inputString = util.readInputString(f, Charset.defaultCharset());
