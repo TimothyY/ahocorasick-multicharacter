@@ -189,6 +189,7 @@ public class AhoCorasick {
 				}
 				if(goToMatch(currState, inputStringBuffer, bufferStr0)!=null){
 					currState = goToMatch(currState, inputStringBuffer, bufferStr0); //set the current node to the result of go to function
+					System.out.println("Matching "+inputStringBuffer+" & Gone to "+currState.getStateContentCharacter());
 					prepareOutput(currState, lineNumberCounter, columnNumberCounter);
 				}
 				else {
