@@ -1,5 +1,6 @@
 package timothyyudi.ahocorasickmulticharacter.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -8,8 +9,8 @@ public class State {
 	String stateContentCharacter;
 	State parent, failState;
 	HashMap<String, State> nextStateCollection;
-	HashSet<String> localKeywordSet;
-//	HashMap<String, State> componentState; //to handle preparing output from skipeed state
+	HashMap<String, ArrayList<String>> nextOutputCollection;
+	boolean hasFullKeyword;
 
 	/**Called when root is created.*/
 	public State(){
@@ -18,8 +19,8 @@ public class State {
 		this.stateContentCharacter = null;
 		this.failState = null;
 		this.nextStateCollection = new HashMap<>();
-		this.localKeywordSet = null;
-//		this.componentState = null;
+		this.nextOutputCollection = null;
+		this.hasFullKeyword = false;
 	}
 
 	/**Called each time a new state is created*/
@@ -29,7 +30,8 @@ public class State {
 		this.stateContentCharacter = stateContentCharacter;
 		this.failState = failState;
 		this.nextStateCollection = new HashMap<>();
-		this.localKeywordSet = null;
+		this.nextOutputCollection = null;
+		this.hasFullKeyword = false;
 	}
 
 	public String getStateContentCharacter() {
@@ -63,13 +65,22 @@ public class State {
 	public void setNextStateCollection(HashMap<String, State> nextStateCollection) {
 		this.nextStateCollection = nextStateCollection;
 	}
-		
-	public HashSet<String> getLocalKeywordSet() {
-		return localKeywordSet;
+
+	public HashMap<String, ArrayList<String>> getNextOutputCollection() {
+		return nextOutputCollection;
 	}
 
-	public void setLocalKeywordSet(HashSet<String> localKeywordSet) {
-		this.localKeywordSet = localKeywordSet;
+	public void setNextOutputCollection(HashMap<String, ArrayList<String>> nextOutputCollection) {
+		this.nextOutputCollection = nextOutputCollection;
 	}
+
+	public boolean isHasFullKeyword() {
+		return hasFullKeyword;
+	}
+
+	public void setHasFullKeyword(boolean hasFullKeyword) {
+		this.hasFullKeyword = hasFullKeyword;
+	}
+		
 	
 }

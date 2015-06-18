@@ -92,10 +92,13 @@ public class AhoCorasick {
 			}
 			
 			if(i==keyword.length()-1){
-				if(currState.getLocalKeywordSet()==null){
-					currState.setLocalKeywordSet(new HashSet<String>());
+				if(currState.getNextOutputCollection()==null){
+					currState.setNextOutputCollection(new HashMap<String,ArrayList<String>>());
 				}
-				currState.getLocalKeywordSet().add(keyword);
+				if(currState.getNextOutputCollection().get(literalCurrChar)==null){
+					currState.getNextOutputCollection().put(literalCurrChar, new ArrayList<>());  
+				}
+				currState.getNextOutputCollection().get(literalCurrChar).add(keyword);
 			}
 		}
 		
@@ -188,6 +191,12 @@ public class AhoCorasick {
 					HashMap<String, State> stateNXiChilds = stateNXi.getNextStateCollection();//contoh anak node level 1
 					for (State stateNXj : stateNXiChilds.values()) {//BEGIN 5th phase//ada 2 node baru dengan multichar di queuetmpset
 						stateNXi.getParent().getNextStateCollection().put(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter(), stateNXj);//add to main trie
+						stateNXi.getParent().getNextOutputCollection().put(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter(), new ArrayList<>());
+						stateNXi.getParent().getNextOutputCollection().get(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter()).addAll(stateNXi.getNextOutputCollection().get(stateNXi.getStateContentCharacter()));
+						stateNXi.getParent().getNextOutputCollection().get(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter()).addAll(stateNXj.getNextOutputCollection().get(stateNXj.getStateContentCharacter()));
+						if(stateNXi.getParent().getNextOutputCollection().get(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter()).size()>0){
+							stateNXi.getParent().getNextStateCollection().get(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter()).setHasFullKeyword(true);
+						}
 					}//END 5th phase
 				}//END 4th phase
 			}//END 3rd phase
@@ -297,11 +306,6 @@ public class AhoCorasick {
 		
 		Utility util = new Utility();
 		util.writeAhoCorasickTime(ahoCorasickTimeTotal);
-	}
-	
-	private void shiftToExtTrie(State state, String lastChar) {
-		if(goTo(state, lastChar)!=null)
-		this.currState = goTo(state, lastChar);
 	}
 	
 	/**prepare output for the matching keywords found*/
