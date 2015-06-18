@@ -6,18 +6,20 @@ import java.util.HashSet;
 public class State {
 
 	String stateContentCharacter;
-	String fullKeyword;
 	State parent, failState;
 	HashMap<String, State> nextStateCollection;
-	
+	HashSet<String> localKeywordSet;
+//	HashMap<String, State> componentState; //to handle preparing output from skipeed state
+
 	/**Called when root is created.*/
 	public State(){
 		super();
 		this.parent = null;
 		this.stateContentCharacter = null;
 		this.failState = null;
-		this.fullKeyword = null;
 		this.nextStateCollection = new HashMap<>();
+		this.localKeywordSet = null;
+//		this.componentState = null;
 	}
 
 	/**Called each time a new state is created*/
@@ -26,8 +28,8 @@ public class State {
 		this.parent = parent;
 		this.stateContentCharacter = stateContentCharacter;
 		this.failState = failState;
-		this.fullKeyword = null;
 		this.nextStateCollection = new HashMap<>();
+		this.localKeywordSet = null;
 	}
 
 	public String getStateContentCharacter() {
@@ -36,14 +38,6 @@ public class State {
 
 	public void setStateContentCharacter(String stateContentCharacter) {
 		this.stateContentCharacter = stateContentCharacter;
-	}
-
-	public String getFullKeyword() {
-		return fullKeyword;
-	}
-
-	public void setFullKeyword(String fullKeyword) {
-		this.fullKeyword = fullKeyword;
 	}
 
 	public State getParent() {
@@ -70,4 +64,12 @@ public class State {
 		this.nextStateCollection = nextStateCollection;
 	}
 		
+	public HashSet<String> getLocalKeywordSet() {
+		return localKeywordSet;
+	}
+
+	public void setLocalKeywordSet(HashSet<String> localKeywordSet) {
+		this.localKeywordSet = localKeywordSet;
+	}
+	
 }

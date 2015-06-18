@@ -2,6 +2,7 @@ package timothyyudi.ahocorasickmulticharacter.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
@@ -91,7 +92,10 @@ public class AhoCorasick {
 			}
 			
 			if(i==keyword.length()-1){
-				currState.setFullKeyword(keyword);
+				if(currState.getLocalKeywordSet()==null){
+					currState.setLocalKeywordSet(new HashSet<String>());
+				}
+				currState.getLocalKeywordSet().add(keyword);
 			}
 		}
 		
@@ -302,7 +306,8 @@ public class AhoCorasick {
 	
 	/**prepare output for the matching keywords found*/
 	private void prepareOutput(State state,int lineNumber, int endColumnNumber){
-		if(state.getFullKeyword()!=null){//jika currNode = fullword
+//		State tempState = state;//future for componentState
+		if(state.getLocalKeywordSet()!=null){//jika currNode = fullword
 			if(inputString.substring(endColumnNumber-1-(state.getFullKeyword().length()), endColumnNumber-1).compareToIgnoreCase(state.getFullKeyword())!=0){
 				endColumnNumber--;
 			}
