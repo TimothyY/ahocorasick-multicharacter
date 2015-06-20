@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import timothyyudi.ahocorasickmulticharacter.controller.AhoCorasick;
@@ -18,7 +19,6 @@ public class MainUI {
 		
 		Utility util = new Utility();
 		
-		ArrayList<String> keywords = new ArrayList<String>(); //prepare keywords
 		try {
 //			keywords = util.readKeyword("c:/temp/snortrules.txt"); //load keywords from file
 //			keywords = util.readKeyword("c:/temp/kjvkeyword_simple.txt"); //load keywords from file
@@ -28,7 +28,7 @@ public class MainUI {
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2.txt");
 			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/SimpleDatabase.txt");
-			keywords = util.readKeyword(f); //load keywords from file
+			util.readKeyword(f); //load keywords from file
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -37,12 +37,12 @@ public class MainUI {
 		AhoCorasick ahoCorasick = new AhoCorasick();
 		
 		timer=System.currentTimeMillis();
-		ahoCorasick.prepareGoToFunction(keywords); //prepare ahocorasick goTo function
+		ahoCorasick.prepareGoToFunction(AhoCorasick.fullKeywordMap); //prepare ahocorasick goTo function
 		timer = System.currentTimeMillis() - timer;
 		System.out.println("Finish creating trie in "+timer + " millisecond(s)");
 		
 		timer=System.currentTimeMillis();
-		ahoCorasick.prepareFailFromFunction(); //prepare ahocorasick fail function
+		//ahoCorasick.prepareFailFromFunction(); //prepare ahocorasick fail function
 		timer = System.currentTimeMillis() - timer;
 		System.out.println("Finish creating fail function in "+timer + " millisecond(s)");
 		

@@ -1,36 +1,35 @@
 package timothyyudi.ahocorasickmulticharacter.model;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class State {
 
-	String stateOriginalContentCharacter;
-	State parent, failState;
-	boolean hasFullKeyword;
-	HashMap<String, State> nextStateCollection;
-	List<String> outputCollection;
+	String stateContentCharacter;
+	//State parent, failState;
+	Integer fullKeywordHashCode;
+	HashMap<String, LiteratedStatePointer> nextLiteratedStateCollection;
+	LiteratedStatePointer originLiteratedStatePointer;
 
 	/**Called when root is created.*/
 	public State(){
 		super();
-		this.parent = null;
 		this.stateContentCharacter = null;
-		this.failState = null;
-		this.nextStateCollection = new HashMap<>();
-		this.outputCollection = null;
-		this.hasFullKeyword = false;
+//		this.parent = null;
+//		this.failState = null;
+		this.fullKeywordHashCode = null;
+		this.nextLiteratedStateCollection = null;
+		this.originLiteratedStatePointer=null;
 	}
 
 	/**Called each time a new state is created*/
 	public State(State parent, String stateContentCharacter, State failState){
 		super();
-		this.parent = parent;
 		this.stateContentCharacter = stateContentCharacter;
-		this.failState = failState;
-		this.nextStateCollection = new HashMap<>();
-		this.outputCollection = null;
-		this.hasFullKeyword = false;
+//		this.parent = parent;
+//		this.failState = failState;
+		this.fullKeywordHashCode = null;
+		this.nextLiteratedStateCollection = null;
+		this.originLiteratedStatePointer = null;
 	}
 
 	public String getStateContentCharacter() {
@@ -41,6 +40,7 @@ public class State {
 		this.stateContentCharacter = stateContentCharacter;
 	}
 
+/*
 	public State getParent() {
 		return parent;
 	}
@@ -56,30 +56,31 @@ public class State {
 	public void setFailState(State failState) {
 		this.failState = failState;
 	}
-
-	public HashMap<String, State> getNextStateCollection() {
-		return nextStateCollection;
+*/
+	public Integer getFullKeywordHashCode() {
+		return fullKeywordHashCode;
 	}
 
-	public void setNextStateCollection(HashMap<String, State> nextStateCollection) {
-		this.nextStateCollection = nextStateCollection;
+	public void setFullKeywordHashCode(Integer fullKeywordHashCode) {
+		this.fullKeywordHashCode = fullKeywordHashCode;
 	}
 
-	public List<String> getOutputCollection() {
-		return outputCollection;
+	public HashMap<String, LiteratedStatePointer> getNextLiteratedStateCollection() {
+		return nextLiteratedStateCollection;
 	}
 
-	public void setOutputCollection(List<String> outputCollection) {
-		this.outputCollection = outputCollection;
+	public void setNextLiteratedStateCollection(
+			HashMap<String, LiteratedStatePointer> nextLiteratedStateCollection) {
+		this.nextLiteratedStateCollection = nextLiteratedStateCollection;
 	}
 
-	public boolean isHasFullKeyword() {
-		return hasFullKeyword;
+	public LiteratedStatePointer getOriginLiteratedStatePointer() {
+		return originLiteratedStatePointer;
 	}
 
-	public void setHasFullKeyword(boolean hasFullKeyword) {
-		this.hasFullKeyword = hasFullKeyword;
+	public void setOriginLiteratedStatePointer(
+			LiteratedStatePointer originLiteratedStatePointer) {
+		this.originLiteratedStatePointer = originLiteratedStatePointer;
 	}
 		
-	
 }

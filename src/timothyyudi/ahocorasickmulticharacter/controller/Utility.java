@@ -18,16 +18,16 @@ import timothyyudi.ahocorasickmulticharacter.model.Output;
 public class Utility {
 
 	/**read keyword file from snort rules*/
-	public ArrayList<String> readKeyword(File f){
+	public void readKeyword(File f){
 		Scanner scanner;
-		ArrayList<String> list = new ArrayList<String>();
+		AhoCorasick.fullKeywordMap = new HashMap<>();
 		String temp;
 		int firstQuotes=0, secondQuotes=0, thirdQuotes=0, fourthQuotes=0;
 		try {
 			scanner = new Scanner(f);
 			
 			while (scanner.hasNextLine()){
-				list.add(scanner.nextLine().trim()); //ambil per spasi.
+				AhoCorasick.fullKeywordMap.put(scanner.nextLine().trim().hashCode(), scanner.nextLine().trim()); //ambil per spasi.
 //			while (scanner.hasNextLine()){
 //			    temp = scanner.nextLine();
 //			    firstQuotes=temp.indexOf("\"")+1;
@@ -45,7 +45,6 @@ public class Utility {
 			e.printStackTrace();
 		}
 		
-		return list;
 	}
 	
 	/**Read input string file as inputString*/
