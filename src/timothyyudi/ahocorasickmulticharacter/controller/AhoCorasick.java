@@ -1,9 +1,13 @@
 package timothyyudi.ahocorasickmulticharacter.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Pattern;
 
 import timothyyudi.ahocorasickmulticharacter.model.Output;
@@ -92,13 +96,19 @@ public class AhoCorasick {
 			}
 			
 			if(i==keyword.length()-1){
-				if(currState.getNextOutputCollection()==null){
-					currState.setNextOutputCollection(new HashMap<String,ArrayList<String>>());
+//				if(currState.getNextOutputCollection()==null){
+//					currState.setNextOutputCollection(new HashMap<String,ArrayList<String>>());
+//				}
+//				if(currState.getNextOutputCollection().get(literalCurrChar)==null){
+//					currState.getNextOutputCollection().put(literalCurrChar, new ArrayList<String>());  
+//				}
+//				currState.getNextOutputCollection().get(literalCurrChar).add(keyword);
+				
+				currState.setHasFullKeyword(true);
+				if(currState.getOutputCollection()==null){
+					currState.setOutputCollection(new ArrayList<String>());
 				}
-				if(currState.getNextOutputCollection().get(literalCurrChar)==null){
-					currState.getNextOutputCollection().put(literalCurrChar, new ArrayList<>());  
-				}
-				currState.getNextOutputCollection().get(literalCurrChar).add(keyword);
+				currState.getOutputCollection().add(keyword);
 			}
 		}
 		
@@ -191,10 +201,10 @@ public class AhoCorasick {
 					HashMap<String, State> stateNXiChilds = stateNXi.getNextStateCollection();//contoh anak node level 1
 					for (State stateNXj : stateNXiChilds.values()) {//BEGIN 5th phase//ada 2 node baru dengan multichar di queuetmpset
 						stateNXi.getParent().getNextStateCollection().put(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter(), stateNXj);//add to main trie
-						stateNXi.getParent().getNextOutputCollection().put(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter(), new ArrayList<>());
+						stateNXi.getParent().getNextOutputCollection().put(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter(), new ArrayList<String>());
 						stateNXi.getParent().getNextOutputCollection().get(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter()).addAll(stateNXi.getNextOutputCollection().get(stateNXi.getStateContentCharacter()));
 						stateNXi.getParent().getNextOutputCollection().get(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter()).addAll(stateNXj.getNextOutputCollection().get(stateNXj.getStateContentCharacter()));
-						if(stateNXi.getParent().getNextOutputCollection().get(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter()).size()>0){
+						if(stateNXi.getParent().getNextStateCollection().get(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter()).getOutputCollection().size()){
 							stateNXi.getParent().getNextStateCollection().get(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter()).setHasFullKeyword(true);
 						}
 					}//END 5th phase
@@ -310,14 +320,13 @@ public class AhoCorasick {
 	
 	/**prepare output for the matching keywords found*/
 	private void prepareOutput(State state,int lineNumber, int endColumnNumber){
-//		State tempState = state;//future for componentState
-		if(state.getLocalKeywordSet()!=null){//jika currNode = fullword
-			if(inputString.substring(endColumnNumber-1-(state.getFullKeyword().length()), endColumnNumber-1).compareToIgnoreCase(state.getFullKeyword())!=0){
-				endColumnNumber--;
-			}
-			outputList.add(new Output(state.getFullKeyword(), lineNumber, endColumnNumber-(state.getFullKeyword().length()), endColumnNumber-1));
-		}
-		
+//		if(state.isHasFullKeyword()==true){//jika currNode = fullword
+//			if(inputString.substring(endColumnNumber-1-(state.getFullKeyword().length()), endColumnNumber-1).compareToIgnoreCase(state.getFullKeyword())!=0){
+//				endColumnNumber--;
+//			}
+//			outputList.add(new Output(state.getFullKeyword(), lineNumber, endColumnNumber-(state.getFullKeyword().length()), endColumnNumber-1));
+//		}
+		/*
 		while(!failFrom(state).equals(root)){//jika state tersebut punya fail node yang bukan root
 			state = failFrom(state);
 			if(state.getFullKeyword()!=null){//jika failState == fullword
@@ -325,6 +334,12 @@ public class AhoCorasick {
 					endColumnNumber--;
 				}
 				outputList.add(new Output(state.getFullKeyword(), lineNumber, endColumnNumber-(state.getFullKeyword().length()), endColumnNumber-1));
+			}
+		}*/
+		
+		if(state.isHasFullKeyword()==true){
+			for (String keyword : state.getOutputCollection()) {
+				outputList.add(new Output(keyword, lineNumber, endColumnNumber-(keyword.length()), endColumnNumber-1));
 			}
 		}
 	}

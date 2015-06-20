@@ -3,16 +3,16 @@ package timothyyudi.ahocorasickmulticharacter.model;
 import java.util.HashMap;
 import java.util.List;
 
-public class State {
+public class State_Backup {
 
-	String stateOriginalContentCharacter;
-	State parent, failState;
+	String stateContentCharacter;
+	State_Backup parent, failState;
 	boolean hasFullKeyword;
-	HashMap<String, State> nextStateCollection;
+	HashMap<String, State_Backup> nextStateCollection;
 	List<String> outputCollection;
 
 	/**Called when root is created.*/
-	public State(){
+	public State_Backup(){
 		super();
 		this.parent = null;
 		this.stateContentCharacter = null;
@@ -23,7 +23,7 @@ public class State {
 	}
 
 	/**Called each time a new state is created*/
-	public State(State parent, String stateContentCharacter, State failState){
+	public State_Backup(State_Backup parent, String stateContentCharacter, State_Backup failState){
 		super();
 		this.parent = parent;
 		this.stateContentCharacter = stateContentCharacter;
@@ -41,27 +41,27 @@ public class State {
 		this.stateContentCharacter = stateContentCharacter;
 	}
 
-	public State getParent() {
+	public State_Backup getParent() {
 		return parent;
 	}
 
-	public void setParent(State parent) {
+	public void setParent(State_Backup parent) {
 		this.parent = parent;
 	}
 
-	public State getFailState() {
+	public State_Backup getFailState() {
 		return failState;
 	}
 
-	public void setFailState(State failState) {
+	public void setFailState(State_Backup failState) {
 		this.failState = failState;
 	}
 
-	public HashMap<String, State> getNextStateCollection() {
+	public HashMap<String, State_Backup> getNextStateCollection() {
 		return nextStateCollection;
 	}
 
-	public void setNextStateCollection(HashMap<String, State> nextStateCollection) {
+	public void setNextStateCollection(HashMap<String, State_Backup> nextStateCollection) {
 		this.nextStateCollection = nextStateCollection;
 	}
 
