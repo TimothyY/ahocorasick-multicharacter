@@ -14,36 +14,7 @@ public class Backup {
 //		return node.getNextStateCollection().get(nextInputChar);
 //	}
 
-//	/**A function to move from 1 node of a trie to it's fail node*/
-//	private State failFrom(State node){
-//		return node.getFailState();
-//	}
-	
-//	/**Create the fail fall back state of AhoCorasick trie*/
-//	public void prepareFailFromFunction(){
-//		LinkedList<State> queue = new LinkedList<State>(); //a linked list is needed for BFS
-//		
-//		for (State state : root.getNextStateCollection().values()) {
-//			queue.add(state);
-//			state.setFailState(root);
-//		}
-//		
-//		State tempState;
-//		
-//		while(!queue.isEmpty()){
-//			tempState = queue.pop(); //pop node and get the childrens
-//			for (State state: tempState.getNextStateCollection().values()) { //implementation differ based on nextStateCollection data structure
-//				queue.add(state);
-//				currState=failFrom(tempState);
-//				while(goTo(currState, state.getStateContentCharacter())==null&&!currState.equals(root)){ //while fail 
-//					currState = failFrom(currState); //current state = failState	
-//				}//exit while when found a match from goTo of a failState or when it reach root
-//				if(goTo(currState, state.getStateContentCharacter())!=null){
-//					state.setFailState(goTo(currState, state.getStateContentCharacter()));
-//				}
-//			}
-//		}
-//	}
+
 	
 //	public void prepareNTrie(int multicharNumber){
 //		

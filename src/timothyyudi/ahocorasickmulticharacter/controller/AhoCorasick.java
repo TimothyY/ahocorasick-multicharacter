@@ -75,6 +75,9 @@ public class AhoCorasick {
 				currState=goToMatch(currState, currChar);
 			}else{
 				literalCurrChar = Pattern.quote(currChar);
+				if(currState.getNextLiteratedStateCollection()==null){
+					currState.setNextLiteratedStateCollection(new HashMap<>());
+				}
 				currState.getNextLiteratedStateCollection().put(literalCurrChar, new LiteratedStatePointer());
 				tempLiteratedStatePointer = currState.getNextLiteratedStateCollection().get(literalCurrChar);
 				tempLiteratedStatePointer.setState(new State(currState,currChar, root));
@@ -83,6 +86,9 @@ public class AhoCorasick {
 			
 			if(i==keyword.length()-1){
 				currState.setFullKeywordHashCode(keyword.hashCode());
+				if(tempLiteratedStatePointer==null){
+					tempLiteratedStatePointer = new LiteratedStatePointer();
+				}
 				if(tempLiteratedStatePointer.getFullKeywordPointerList()==null){
 					tempLiteratedStatePointer.setFullKeywordPointerList(new ArrayList<>());
 				}
@@ -90,6 +96,37 @@ public class AhoCorasick {
 			}
 		}
 		
+	}
+	
+	/**A function to move from 1 node of a trie to it's fail node*/
+	private State failFrom(State node){
+		return node.getFailState();
+	}
+	
+	/**Create the fail fall back state of AhoCorasick trie*/
+	public void prepareFailFromFunction(){
+		LinkedList<State> queue = new LinkedList<State>(); //a linked list is needed for BFS
+		State tempState, tempState2;
+		for (LiteratedStatePointer literatedStatePointer : root.getNextLiteratedStateCollection().values()) {
+			tempState = literatedStatePointer.getState();
+			queue.add(tempState);
+			tempState.setFailState(root);
+		}
+		
+		while(!queue.isEmpty()){
+			tempState = queue.pop(); //pop node and get the childrens
+			for (LiteratedStatePointer literatedStatePointer: tempState.getNextLiteratedStateCollection().values()) { //implementation differ based on nextStateCollection data structure
+				tempState2 = literatedStatePointer.getState();
+				queue.add(tempState2);
+				currState=failFrom(tempState2);
+				while(goToMatch(currState, tempState2.getStateContentCharacter())==null&&!currState.equals(root)){ //while fail 
+					currState = failFrom(currState); //current state = failState
+				}//exit while when found a match from goTo of a failState or when it reach root
+				if(goToMatch(currState, tempState2.getStateContentCharacter())!=null){
+					tempState2.setFailState(goToMatch(currState, tempState2.getStateContentCharacter()));
+				}
+			}
+		}
 	}
 	
 	public void prepareNTrie(int multicharNumber){
@@ -102,52 +139,67 @@ public class AhoCorasick {
 		LinkedList<State> oriStateQueueForPhase2 = new LinkedList<>(oriStateQueue); 
 		
 		State tempState; //aka Si, placeholder for loop.
+		HashMap<String, LiteratedStatePointer> tempNextLiteratedStatePointerMap;
 		
-		// [Phase 1] Enhance original trie as preparation before creating derviation node
-		while(!oriStateQueueForPhase1.isEmpty()){
-			tempState=oriStateQueueForPhase1.pop();
-			//create a copy so the hashmap can be added, avoid concurrency problem
-			//HashMap<String,State> cpOriChildStateHM = new HashMap<>(tempState.getNextStateCollection()); //jika curr state =0 maka ini adalah node lvl 1
-			HashMap<String,LiteratedStatePointer> cpOriChildStateHM = new HashMap<>(tempState.getNextLiteratedStateCollection()); //jika curr state =0 maka ini adalah node lvl 1
-			
-			for (String key : originalAncestors.keySet()) { //menambahkan originalAncestors lv1
-				if (!cpOriChildStateHM.containsKey(key)) {
-					cpOriChildStateHM.put(key, originalAncestors.get(key));
-				}
-			}
-			
-			//add negative original node as a regex pattern
-			String negativeOriginalPattern = "[^";
-			for (String key : cpOriChildStateHM.keySet()) {
-				negativeOriginalPattern += key;				
-			}
-			negativeOriginalPattern+="]";
-			//point negative regex to root
-			cpOriChildStateHM.put(negativeOriginalPattern, literatedRoot);
-			
-			tempState.getNextLiteratedStateCollection().putAll(cpOriChildStateHM);
-		}
+//		// [Phase 1] Enhance original trie as preparation before creating derviation node
+//		while(!oriStateQueueForPhase1.isEmpty()){
+//			tempState=oriStateQueueForPhase1.pop();
+//			//create a copy so the hashmap can be added, avoid concurrency problem
+//			//HashMap<String,State> cpOriChildStateHM = new HashMap<>(tempState.getNextStateCollection()); //jika curr state =0 maka ini adalah node lvl 1
+//			if(tempState.getNextLiteratedStateCollection()==null){
+//				tempState.setNextLiteratedStateCollection(new HashMap<>());
+//			}
+//			HashMap<String,LiteratedStatePointer> cpOriChildStateHM = new HashMap<>(tempState.getNextLiteratedStateCollection()); //jika curr state =0 maka ini adalah node lvl 1
+//			
+//			for (String key : originalAncestors.keySet()) { //menambahkan originalAncestors lv1
+//				if (!cpOriChildStateHM.containsKey(key)) {
+//					cpOriChildStateHM.put(key, originalAncestors.get(key));
+//				}
+//			}
+//			
+//			//add negative original node as a regex pattern
+//			String negativeOriginalPattern = "[^";
+//			for (String key : cpOriChildStateHM.keySet()) {
+//				negativeOriginalPattern += key;				
+//			}
+//			negativeOriginalPattern+="]";
+//			//point negative regex to root
+//			cpOriChildStateHM.put(negativeOriginalPattern, literatedRoot);
+//			
+//			tempState.getNextLiteratedStateCollection().putAll(cpOriChildStateHM);
+//		}
 		
 		// [Phase 2] Start creating derivation node
+		String failPattern;
 		while(!oriStateQueueForPhase2.isEmpty()) {
+			//System.out.println("saizu: "+oriStateQueueForPhase2.size());
 			tempState=oriStateQueueForPhase2.pop();
+			failPattern = "";
+			tempNextLiteratedStatePointerMap = new HashMap<>();
 			//create a copy so the hashmap can be added, avoid concurrency problem
 			HashMap<String,LiteratedStatePointer> cpOriChildStateHM = new HashMap<>(tempState.getNextLiteratedStateCollection()); //jika curr state =0 maka ini adalah node lvl 1
-			for (int m=0; m<multicharNumber-1; m++) {//loop match with desired n //BEGIN 3rd phase //jika n=2 maka akan jalan 1 kali
+			//for (int m=0; m<multicharNumber-1; m++) {//loop match with desired n //BEGIN 3rd phase //jika n=2 maka akan jalan 1 kali. useless for now
 				for (LiteratedStatePointer lStateNXi : cpOriChildStateHM.values()) {//BEGIN 4th phase
 					State stateNXi = lStateNXi.getState();
+					failPattern = Pattern.quote(stateNXi.getStateContentCharacter())+"[^";
 					HashMap<String, LiteratedStatePointer> lStateNXiChilds = stateNXi.getNextLiteratedStateCollection();//contoh anak node level 1
 					for (LiteratedStatePointer lStateNXj : lStateNXiChilds.values()) {//BEGIN 5th phase//ada 2 node baru dengan multichar di queuetmpset
 						State stateNXj = lStateNXj.getState();
 						String newPattern = Pattern.quote(stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter());
-						tempState.getNextLiteratedStateCollection().put(newPattern, new LiteratedStatePointer());//add to main trie
-						tempState.getNextLiteratedStateCollection().get(newPattern).setState(stateNXj);
-						tempState.getNextLiteratedStateCollection().get(newPattern).setFullKeywordPointerList(new ArrayList<>());
-						tempState.getNextLiteratedStateCollection().get(newPattern).getFullKeywordPointerList().add(stateNXi.getFullKeywordHashCode());
-						tempState.getNextLiteratedStateCollection().get(newPattern).getFullKeywordPointerList().add(stateNXj.getFullKeywordHashCode());
+						tempNextLiteratedStatePointerMap.put(newPattern, new LiteratedStatePointer());
+						tempNextLiteratedStatePointerMap.get(newPattern).setState(stateNXj);
+						tempNextLiteratedStatePointerMap.get(newPattern).setFullKeywordPointerList(new ArrayList<>());
+						tempNextLiteratedStatePointerMap.get(newPattern).getFullKeywordPointerList().add(stateNXi.getFullKeywordHashCode());
+						tempNextLiteratedStatePointerMap.get(newPattern).getFullKeywordPointerList().add(stateNXj.getFullKeywordHashCode());						
 					}//END 5th phase
+					failPattern +="]";
+					tempNextLiteratedStatePointerMap.put(failPattern, new LiteratedStatePointer());
+					tempNextLiteratedStatePointerMap.get(failPattern).setState(null);
+					tempNextLiteratedStatePointerMap.get(failPattern).setFullKeywordPointerList(new ArrayList<>());
+					tempNextLiteratedStatePointerMap.get(failPattern).getFullKeywordPointerList().add(stateNXi.getFullKeywordHashCode());
 				}//END 4th phase
-			}//END 3rd phase
+			//}//END 3rd phase
+			tempState.getNextLiteratedStateCollection().putAll(tempNextLiteratedStatePointerMap);
 		}//END 2nd Phase
 	}//END
 	
@@ -167,9 +219,11 @@ public class AhoCorasick {
 		
 		while(!queue.isEmpty()){
 			tempState = queue.pop(); //pop node and get the childrens
-			for (LiteratedStatePointer lStatePointer : tempState.getNextLiteratedStateCollection().values()) {
-				queue.add(lStatePointer.getState());
-				resultQueue.add(lStatePointer.getState());
+			if(tempState.getNextLiteratedStateCollection()!=null){
+				for (LiteratedStatePointer lStatePointer : tempState.getNextLiteratedStateCollection().values()) {
+					queue.add(lStatePointer.getState());
+					resultQueue.add(lStatePointer.getState());
+				}
 			}
 		}
 		return resultQueue;
@@ -204,9 +258,9 @@ public class AhoCorasick {
 				
 				bufferStr0 = ""+inputStringBuffer.charAt(0);
 				
-//				while (goToMatch(currState, inputStringBuffer)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
-//					currState= failFrom(currState);
-//				}
+				while (goToMatch(currState, inputStringBuffer)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
+					currState= failFrom(currState);
+				}
 				if(goToMatch(currState, inputStringBuffer)!=null){
 					currState = goToMatch(currState, inputStringBuffer); //set the current node to the result of go to function
 					prepareOutput(currState.getOriginLiteratedStatePointer(), lineNumberCounter, columnNumberCounter);
@@ -228,26 +282,13 @@ public class AhoCorasick {
 	
 	/**prepare output for the matching keywords found*/
 	private void prepareOutput(LiteratedStatePointer lStatePointer,int lineNumber, int endColumnNumber){
-//		if(state.isHasFullKeyword()==true){//jika currNode = fullword
-//			if(inputString.substring(endColumnNumber-1-(state.getFullKeyword().length()), endColumnNumber-1).compareToIgnoreCase(state.getFullKeyword())!=0){
-//				endColumnNumber--;
-//			}
-//			outputList.add(new Output(state.getFullKeyword(), lineNumber, endColumnNumber-(state.getFullKeyword().length()), endColumnNumber-1));
-//		}
-		/*
-		while(!failFrom(state).equals(root)){//jika state tersebut punya fail node yang bukan root
-			state = failFrom(state);
-			if(state.getFullKeyword()!=null){//jika failState == fullword
-				if(inputString.substring(endColumnNumber-1-(state.getFullKeyword().length()), endColumnNumber-1).compareToIgnoreCase(state.getFullKeyword())!=0){
-					endColumnNumber--;
-				}
-				outputList.add(new Output(state.getFullKeyword(), lineNumber, endColumnNumber-(state.getFullKeyword().length()), endColumnNumber-1));
-			}
-		}*/
 		
 		if(lStatePointer.getFullKeywordPointerList()!=null){
-			for (Integer keywordHashCode : lStatePointer.getFullKeywordPointerList()) {
-				outputList.add(new Output(AhoCorasick.fullKeywordMap.get(keywordHashCode), lineNumber, endColumnNumber-(AhoCorasick.fullKeywordMap.get(keywordHashCode).length()), endColumnNumber-1));
+			if(lStatePointer.getFullKeywordPointerList().size()>0){
+				for (Integer keywordHashCode : lStatePointer.getFullKeywordPointerList()) {
+					if(fullKeywordMap.get(keywordHashCode)!=null)
+						outputList.add(new Output(AhoCorasick.fullKeywordMap.get(keywordHashCode), lineNumber, endColumnNumber-(AhoCorasick.fullKeywordMap.get(keywordHashCode).length()), endColumnNumber-1));
+				}
 			}
 		}
 	}

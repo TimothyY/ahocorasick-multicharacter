@@ -5,7 +5,8 @@ import java.util.HashMap;
 public class State {
 
 	String stateContentCharacter;
-	//State parent, failState;
+	//State parent; 
+	State failState;
 	Integer fullKeywordHashCode;
 	HashMap<String, LiteratedStatePointer> nextLiteratedStateCollection;
 	LiteratedStatePointer originLiteratedStatePointer;
@@ -15,7 +16,7 @@ public class State {
 		super();
 		this.stateContentCharacter = null;
 //		this.parent = null;
-//		this.failState = null;
+		this.failState = null;
 		this.fullKeywordHashCode = null;
 		this.nextLiteratedStateCollection = null;
 		this.originLiteratedStatePointer=null;
@@ -26,12 +27,23 @@ public class State {
 		super();
 		this.stateContentCharacter = stateContentCharacter;
 //		this.parent = parent;
-//		this.failState = failState;
+		this.failState = failState;
 		this.fullKeywordHashCode = null;
 		this.nextLiteratedStateCollection = null;
 		this.originLiteratedStatePointer = null;
 	}
 
+	/**Called each time a new state is created*/
+	public State(State originalState){
+		super();
+		this.stateContentCharacter = originalState.getStateContentCharacter();
+//		this.parent = parent;
+		this.failState = originalState.getFailState();
+		this.fullKeywordHashCode = originalState.getFullKeywordHashCode();
+		this.nextLiteratedStateCollection = originalState.getNextLiteratedStateCollection();
+		this.originLiteratedStatePointer = originalState.getOriginLiteratedStatePointer();
+	}
+	
 	public String getStateContentCharacter() {
 		return stateContentCharacter;
 	}
@@ -48,7 +60,7 @@ public class State {
 	public void setParent(State parent) {
 		this.parent = parent;
 	}
-
+*/
 	public State getFailState() {
 		return failState;
 	}
@@ -56,7 +68,7 @@ public class State {
 	public void setFailState(State failState) {
 		this.failState = failState;
 	}
-*/
+
 	public Integer getFullKeywordHashCode() {
 		return fullKeywordHashCode;
 	}
