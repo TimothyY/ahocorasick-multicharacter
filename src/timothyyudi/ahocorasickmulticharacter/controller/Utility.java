@@ -20,14 +20,15 @@ public class Utility {
 	/**read keyword file from snort rules*/
 	public void readKeyword(File f){
 		Scanner scanner;
-		AhoCorasick.fullKeywordMap = new HashMap<>();
 		String temp;
 		int firstQuotes=0, secondQuotes=0, thirdQuotes=0, fourthQuotes=0;
 		try {
 			scanner = new Scanner(f);
 			
 			while (scanner.hasNextLine()){
-				AhoCorasick.fullKeywordMap.put(scanner.nextLine().trim().hashCode(), scanner.nextLine().trim()); //ambil per spasi.
+				temp = scanner.nextLine().trim();
+				System.out.println("inserting: "+temp);
+				AhoCorasick.fullKeywordMap.put(temp.hashCode(), temp); //ambil per spasi.
 //			while (scanner.hasNextLine()){
 //			    temp = scanner.nextLine();
 //			    firstQuotes=temp.indexOf("\"")+1;
@@ -53,7 +54,8 @@ public class Utility {
 		RandomAccessFile rf = new RandomAccessFile(f, "r");
 		byte[] encoded = new byte[(int)rf.length()];
 		rf.read(encoded);
-		return new String(encoded, encoding).toLowerCase();
+		rf.close();
+		return new String(encoded, encoding);
 	}
 	
 	/**Write output to output.txt
