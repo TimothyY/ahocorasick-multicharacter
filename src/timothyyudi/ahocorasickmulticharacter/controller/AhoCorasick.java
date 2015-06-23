@@ -34,7 +34,7 @@ public class AhoCorasick {
 		root= new State();
 		literatedRoot = new LiteratedStatePointer();
 		literatedRoot.setState(root);
-		currState = root;
+		//currState = root;
 	}
 	
 	/**A function to move from 1 node of a trie to the others based on next input character*/
@@ -119,7 +119,7 @@ public class AhoCorasick {
 				for (LiteratedStatePointer literatedStatePointer: tempState.getNextLiteratedStateCollection().values()) { //implementation differ based on nextStateCollection data structure
 					tempState2 = literatedStatePointer.getState();
 					queue.add(tempState2);
-					currState=failFrom(tempState2);
+					currState=failFrom(tempState);
 					while(goToMatch(currState, tempState2.getStateContentCharacter())==null&&!currState.equals(root)){ //while fail 
 						currState = failFrom(currState); //current state = failState
 					}//exit while when found a match from goTo of a failState or when it reach root
@@ -278,6 +278,7 @@ public class AhoCorasick {
 					currState= failFrom(currState);
 				}
 				if(goToMatch(currState, inputStringBuffer)!=null){
+					System.out.println("Found "+inputStringBuffer);
 					currState = goToMatch(currState, inputStringBuffer); //set the current node to the result of go to function
 					prepareOutput(currState.getOriginLiteratedStatePointer(), lineNumberCounter, columnNumberCounter);
 				}
