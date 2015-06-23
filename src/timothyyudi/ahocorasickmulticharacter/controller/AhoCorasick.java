@@ -34,23 +34,11 @@ public class AhoCorasick {
 		root= new State();
 		literatedRoot = new LiteratedStatePointer();
 		literatedRoot.setState(root);
-		//currState = root;
 	}
 	
 	/**A function to move from 1 node of a trie to the others based on next input character*/
-	private State goToMatch(State originNode, String nextInputChar){
-		HashMap<String, LiteratedStatePointer> tempACHM = originNode.getNextLiteratedStateCollection();
-		try {
-			for (String key : tempACHM.keySet()) {
-				if (nextInputChar.matches(key)) {
-					originNode.getNextLiteratedStateCollection().get(key).getState().setOriginLiteratedStatePointer(originNode.getNextLiteratedStateCollection().get(key));
-					return originNode.getNextLiteratedStateCollection().get(key).getState();
-				}
-			}
-		} catch (Exception e) {
-			return null;
-		}
-		return null;
+	private State goTo(State node, String nextInputChar){
+		return node.getNextStateCollection().get(nextInputChar);
 	}
 		
 	/**Prepare AhoCorasick goto function/ successful state of AhoCorasick trie*/
@@ -71,8 +59,8 @@ public class AhoCorasick {
 		for (int i = 0; i < keyword.length(); i++) {
 			
 			currChar=Character.toString(keyword.charAt(keywordInsertionCounter));
-			if(goToMatch(currState, currChar)!=null){
-				currState=goToMatch(currState, currChar);
+			if(goTo(currState, currChar)!=null){
+				currState=goTo(currState, currChar);
 			}else{
 				literalCurrChar = Pattern.quote(currChar);
 				if(currState.getNextLiteratedStateCollection()==null){
@@ -81,7 +69,7 @@ public class AhoCorasick {
 				currState.getNextLiteratedStateCollection().put(literalCurrChar, new LiteratedStatePointer());
 				tempLiteratedStatePointer = currState.getNextLiteratedStateCollection().get(literalCurrChar);
 				tempLiteratedStatePointer.setState(new State(currState,currChar, root));
-				currState = goToMatch(currState, currChar);
+				currState = goTo(currState, currChar);
 			}
 			
 			if(i==keyword.length()-1){
@@ -120,11 +108,11 @@ public class AhoCorasick {
 					tempState2 = literatedStatePointer.getState();
 					queue.add(tempState2);
 					currState=failFrom(tempState);
-					while(goToMatch(currState, tempState2.getStateContentCharacter())==null&&!currState.equals(root)){ //while fail 
+					while(goTo(currState, tempState2.getStateContentCharacter())==null&&!currState.equals(root)){ //while fail 
 						currState = failFrom(currState); //current state = failState
 					}//exit while when found a match from goTo of a failState or when it reach root
-					if(goToMatch(currState, tempState2.getStateContentCharacter())!=null){
-						tempState2.setFailState(goToMatch(currState, tempState2.getStateContentCharacter()));
+					if(goTo(currState, tempState2.getStateContentCharacter())!=null){
+						tempState2.setFailState(goTo(currState, tempState2.getStateContentCharacter()));
 					}
 				}
 			}
@@ -271,15 +259,15 @@ public class AhoCorasick {
 				
 				bufferStr0 = ""+inputStringBuffer.charAt(0);
 				
-				while (goToMatch(currState, inputStringBuffer)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
+				while (goTo(currState, inputStringBuffer)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
 					if(currState.getOriginLiteratedStatePointer().getFullKeywordPointerList()!=null&&currState.getOriginLiteratedStatePointer().getFullKeywordPointerList().size()>0){
 						prepareOutput(currState.getOriginLiteratedStatePointer(), lineNumberCounter, columnNumberCounter);
 					}
 					currState= failFrom(currState);
 				}
-				if(goToMatch(currState, inputStringBuffer)!=null){
+				if(goTo(currState, inputStringBuffer)!=null){
 					System.out.println("Found "+inputStringBuffer);
-					currState = goToMatch(currState, inputStringBuffer); //set the current node to the result of go to function
+					currState = goTo(currState, inputStringBuffer); //set the current node to the result of go to function
 					prepareOutput(currState.getOriginLiteratedStatePointer(), lineNumberCounter, columnNumberCounter);
 				}
 

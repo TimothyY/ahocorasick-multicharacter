@@ -1,47 +1,34 @@
 package timothyyudi.ahocorasickmulticharacter.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class State {
 
 	String stateContentCharacter;
-	//State parent; 
 	State failState;
 	Integer fullKeywordHashCode;
-	HashMap<String, LiteratedStatePointer> nextLiteratedStateCollection;
-	LiteratedStatePointer originLiteratedStatePointer;
+	ArrayList<Integer> fullKeywordHashCodeList;
+	HashMap<String, State> nextStateCollection;
 
 	/**Called when root is created.*/
 	public State(){
 		super();
 		this.stateContentCharacter = null;
-//		this.parent = null;
 		this.failState = null;
 		this.fullKeywordHashCode = null;
-		this.nextLiteratedStateCollection = null;
-		this.originLiteratedStatePointer=null;
+		this.fullKeywordHashCodeList = null;
+		this.nextStateCollection = null;
 	}
 
 	/**Called each time a new state is created*/
 	public State(State parent, String stateContentCharacter, State failState){
 		super();
 		this.stateContentCharacter = stateContentCharacter;
-//		this.parent = parent;
 		this.failState = failState;
 		this.fullKeywordHashCode = null;
-		this.nextLiteratedStateCollection = null;
-		this.originLiteratedStatePointer = null;
-	}
-
-	/**Called each time a new state is created*/
-	public State(State originalState){
-		super();
-		this.stateContentCharacter = originalState.getStateContentCharacter();
-//		this.parent = parent;
-		this.failState = originalState.getFailState();
-		this.fullKeywordHashCode = originalState.getFullKeywordHashCode();
-		this.nextLiteratedStateCollection = originalState.getNextLiteratedStateCollection();
-		this.originLiteratedStatePointer = originalState.getOriginLiteratedStatePointer();
+		this.fullKeywordHashCodeList = null;
+		this.nextStateCollection = null;
 	}
 	
 	public String getStateContentCharacter() {
@@ -52,15 +39,6 @@ public class State {
 		this.stateContentCharacter = stateContentCharacter;
 	}
 
-/*
-	public State getParent() {
-		return parent;
-	}
-
-	public void setParent(State parent) {
-		this.parent = parent;
-	}
-*/
 	public State getFailState() {
 		return failState;
 	}
@@ -77,22 +55,20 @@ public class State {
 		this.fullKeywordHashCode = fullKeywordHashCode;
 	}
 
-	public HashMap<String, LiteratedStatePointer> getNextLiteratedStateCollection() {
-		return nextLiteratedStateCollection;
+	public ArrayList<Integer> getFullKeywordHashCodeList() {
+		return fullKeywordHashCodeList;
 	}
 
-	public void setNextLiteratedStateCollection(
-			HashMap<String, LiteratedStatePointer> nextLiteratedStateCollection) {
-		this.nextLiteratedStateCollection = nextLiteratedStateCollection;
+	public void setFullKeywordHashCodeList(
+			ArrayList<Integer> fullKeywordHashCodeList) {
+		this.fullKeywordHashCodeList = fullKeywordHashCodeList;
 	}
 
-	public LiteratedStatePointer getOriginLiteratedStatePointer() {
-		return originLiteratedStatePointer;
+	public HashMap<String, State> getNextStateCollection() {
+		return nextStateCollection;
 	}
 
-	public void setOriginLiteratedStatePointer(
-			LiteratedStatePointer originLiteratedStatePointer) {
-		this.originLiteratedStatePointer = originLiteratedStatePointer;
+	public void setNextStateCollection(HashMap<String, State> nextStateCollection) {
+		this.nextStateCollection = nextStateCollection;
 	}
-		
 }

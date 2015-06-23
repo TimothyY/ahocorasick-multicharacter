@@ -3,9 +3,6 @@ package timothyyudi.ahocorasickmulticharacter.view;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
 
 import timothyyudi.ahocorasickmulticharacter.controller.AhoCorasick;
 import timothyyudi.ahocorasickmulticharacter.controller.Utility;
@@ -15,7 +12,6 @@ public class MainUI {
 	public static void main(String[] args){
 		
 		long timer;
-		Scanner scanner;
 		
 		Utility util = new Utility();
 		
