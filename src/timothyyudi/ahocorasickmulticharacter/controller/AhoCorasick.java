@@ -63,10 +63,10 @@ public class AhoCorasick {
 				currState=goTo(currState, currChar);
 			}else{
 				literalCurrChar = Pattern.quote(currChar);
-				if(currState.getNextLiteratedStateCollection()==null){
-					currState.setNextLiteratedStateCollection(new HashMap<String,LiteratedStatePointer>());
+				if(currState.getNextStateCollection()==null){
+					currState.setNextStateCollection(new HashMap<String,State>());
 				}
-				currState.getNextLiteratedStateCollection().put(literalCurrChar, new LiteratedStatePointer());
+				currState.getNextStateCollection().put(literalCurrChar, new State());
 				tempLiteratedStatePointer = currState.getNextLiteratedStateCollection().get(literalCurrChar);
 				tempLiteratedStatePointer.setState(new State(currState,currChar, root));
 				currState = goTo(currState, currChar);
@@ -198,7 +198,7 @@ public class AhoCorasick {
 					}
 				}//END 4th phase
 			//}//END 3rd phase
-			tempState.getNextLiteratedStateCollection().putAll(tempNextLiteratedStatePointerMap);
+			tempState.getNextStateCollection().putAll(tempNextLiteratedStatePointerMap);
 			}
 		}//END 2nd Phase
 	}//END
@@ -210,19 +210,19 @@ public class AhoCorasick {
 		LinkedList<State> queue = new LinkedList<State>(); //a linked list is needed for BFS
 		LinkedList<State> resultQueue = new LinkedList<State>(); //a linked list is needed for BFS
 		resultQueue.add(root);
-		for (LiteratedStatePointer lStatePointer : root.getNextLiteratedStateCollection().values()) {
-			queue.add(lStatePointer.getState());
-			resultQueue.add(lStatePointer.getState());
+		for (State state : root.getNextStateCollection().values()) {
+			queue.add(state);
+			resultQueue.add(state);
 		}
 		
 		State tempState;
 		
 		while(!queue.isEmpty()){
 			tempState = queue.pop(); //pop node and get the childrens
-			if(tempState.getNextLiteratedStateCollection()!=null){
-				for (LiteratedStatePointer lStatePointer : tempState.getNextLiteratedStateCollection().values()) {
-					queue.add(lStatePointer.getState());
-					resultQueue.add(lStatePointer.getState());
+			if(tempState.getNextStateCollection()!=null){
+				for (State state : tempState.getNextStateCollection().values()) {
+					queue.add(state);
+					resultQueue.add(state);
 				}
 			}
 		}
@@ -245,7 +245,7 @@ public class AhoCorasick {
 			
 			columnNumberCounter++;
 			if(inputString.charAt(i)=='\n'){
-				System.out.println("processing line: "+lineNumberCounter);
+//				System.out.println("processing line: "+lineNumberCounter);
 				lineNumberCounter++;
 				columnNumberCounter=1;
 			}
@@ -260,15 +260,12 @@ public class AhoCorasick {
 				bufferStr0 = ""+inputStringBuffer.charAt(0);
 				
 				while (goTo(currState, inputStringBuffer)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
-					if(currState.getOriginLiteratedStatePointer().getFullKeywordPointerList()!=null&&currState.getOriginLiteratedStatePointer().getFullKeywordPointerList().size()>0){
-						prepareOutput(currState.getOriginLiteratedStatePointer(), lineNumberCounter, columnNumberCounter);
-					}
+					prepareOutput(currState.getNextStateCollection().get(bufferStr0).getFullKeywordHashCode(), lineNumberCounter, columnNumberCounter);
 					currState= failFrom(currState);
 				}
 				if(goTo(currState, inputStringBuffer)!=null){
-					System.out.println("Found "+inputStringBuffer);
 					currState = goTo(currState, inputStringBuffer); //set the current node to the result of go to function
-					prepareOutput(currState.getOriginLiteratedStatePointer(), lineNumberCounter, columnNumberCounter);
+					prepareOutput(currState.getFullKeywordHashCode(), lineNumberCounter, columnNumberCounter);
 				}
 
 				algoEnd=System.currentTimeMillis();
@@ -286,16 +283,11 @@ public class AhoCorasick {
 	}
 	
 	/**prepare output for the matching keywords found*/
-	private void prepareOutput(LiteratedStatePointer lStatePointer,int lineNumber, int endColumnNumber){
+	private void prepareOutput(Integer keywordHashCode,int lineNumber, int endColumnNumber){
+		if(keywordHashCode!=null)
+			outputList.add(new Output(AhoCorasick.fullKeywordMap.get(keywordHashCode), lineNumber, endColumnNumber-(AhoCorasick.fullKeywordMap.get(keywordHashCode).length()), endColumnNumber-1));
 		
-		if(lStatePointer.getFullKeywordPointerList()!=null){
-			if(lStatePointer.getFullKeywordPointerList().size()>0){
-				for (Integer keywordHashCode : lStatePointer.getFullKeywordPointerList()) {
-					if(fullKeywordMap.get(keywordHashCode)!=null)
-						outputList.add(new Output(AhoCorasick.fullKeywordMap.get(keywordHashCode), lineNumber, endColumnNumber-(AhoCorasick.fullKeywordMap.get(keywordHashCode).length()), endColumnNumber-1));
-				}
-			}
-		}
+		
 	}
 	
 }
