@@ -1,17 +1,18 @@
 package timothyyudi.ahocorasickmulticharacter.model;
 
+import timothyyudi.ahocorasickmulticharacter.controller.AhoCorasick;
+
 public class Output {
 
 	String outputString;
-	int lineNumber,outputStartPoint,outputEndPoint;
+	int lineNumber,endColumnNumber,outputStartPoint,outputEndPoint;
 	
-	public Output(String outputString, int lineNumber, int outputStartPoint,
-			int outputEndPoint) {
+	public Output(Integer hashCode, int lineNumber, int endColumnNumber) {
 		super();
-		this.outputString = outputString;
+		this.outputString = AhoCorasick.fullKeywordMap.get(hashCode);
 		this.lineNumber = lineNumber;
-		this.outputStartPoint = outputStartPoint;
-		this.outputEndPoint = outputEndPoint;
+		this.outputStartPoint = endColumnNumber - this.outputString.length();
+		this.outputEndPoint = endColumnNumber - 1;
 	}
 
 	public String getOutputString() {
@@ -28,6 +29,14 @@ public class Output {
 
 	public void setLineNumber(int lineNumber) {
 		this.lineNumber = lineNumber;
+	}
+
+	public int getEndColumnNumber() {
+		return endColumnNumber;
+	}
+
+	public void setEndColumnNumber(int endColumnNumber) {
+		this.endColumnNumber = endColumnNumber;
 	}
 
 	public int getOutputStartPoint() {

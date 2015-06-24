@@ -27,7 +27,7 @@ public class Utility {
 			
 			while (scanner.hasNextLine()){
 				temp = scanner.nextLine().trim();
-				System.out.println("inserting: "+temp);
+//				System.out.println("inserting: "+temp);
 				AhoCorasick.fullKeywordMap.put(temp.hashCode(), temp); //ambil per spasi.
 //			while (scanner.hasNextLine()){
 //			    temp = scanner.nextLine();
