@@ -1,14 +1,9 @@
 package timothyyudi.ahocorasickmulticharacter.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.regex.Pattern;
 
 import timothyyudi.ahocorasickmulticharacter.model.LiteratedStatePointer;
 import timothyyudi.ahocorasickmulticharacter.model.Output;
@@ -22,7 +17,7 @@ public class AhoCorasick {
 	int keywordInsertionCounter, lineNumberCounter, columnNumberCounter;
 	
 	public static HashMap<Integer, String> fullKeywordMap = new HashMap<>();
-	public static ArrayList<Output> outputList = new ArrayList<>();
+	public static ArrayList<Output> outputList = new ArrayList<Output>();
 	
 	long ahoCorasickTimeTotal;
 	long ahoCorasickTimeFragment;
@@ -117,10 +112,8 @@ public class AhoCorasick {
 		HashMap<String, State> tempNextLiteratedStatePointerMap;
 				
 		// [Phase 2] Start creating derivation node
-		String failPattern;
 		while(!oriStateQueueForPhase2.isEmpty()) {
 			tempState=oriStateQueueForPhase2.pop();
-			failPattern = "";
 			tempNextLiteratedStatePointerMap = new HashMap<String,State>();
 			//create a copy so the hashmap can be added, avoid concurrency problem
 			HashMap<String,State> cpOriChildStateHM;
