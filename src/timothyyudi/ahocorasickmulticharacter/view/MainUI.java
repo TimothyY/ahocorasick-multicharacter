@@ -24,10 +24,10 @@ public class MainUI {
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0010.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0050.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0100.txt");
-			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0200.txt");
+//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0200.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0300.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0400.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0500.txt");
+			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0500.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1000.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/SimpleDatabase.txt");
 			util.readKeyword(f); //load keywords from file

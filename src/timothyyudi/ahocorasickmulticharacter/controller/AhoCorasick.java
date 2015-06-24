@@ -2,7 +2,6 @@ package timothyyudi.ahocorasickmulticharacter.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import timothyyudi.ahocorasickmulticharacter.model.LiteratedStatePointer;
@@ -200,24 +199,27 @@ public class AhoCorasick {
 					currState= failFrom(currState);
 				}
 				if(goTo(currState, inputStringBuffer)!=null){
+//					System.out.println("currState: "+currState.getStateContentCharacter());
 					try {
-						prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);
+						if(inputStringBuffer.length()==2){
+							prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
+						}
 					} catch (Exception e) {}
 					currState = goTo(currState, inputStringBuffer); //set the current node to the result of go to function
 					try {
 						prepareOutput(currState, lineNumberCounter, columnNumberCounter);
 					} catch (Exception e) {}
-					
-				}
-				//shifting enforcer
-				try {
-					if(currState.equals(root)){
+//					System.out.println("input: "+inputStringBuffer);
+				}else if(goTo(currState, inputStringBuffer)==null&&currState.equals(root)){
+					//shifting enforcer
+					try {
 						currState = goTo(currState, bufferStr1); //set the current node to the result of go to function
 						prepareOutput(currState, lineNumberCounter, columnNumberCounter);
+					} catch (Exception e) {
+						currState = root;
 					}
-				} catch (Exception e) {
-					currState = root;
 				}
+				
 
 				algoEnd=System.currentTimeMillis();
 				ahoCorasickTimeFragment=algoEnd-algoStart;
