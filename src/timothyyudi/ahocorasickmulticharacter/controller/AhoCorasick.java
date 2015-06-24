@@ -199,7 +199,7 @@ public class AhoCorasick {
 					currState= failFrom(currState);
 				}
 				if(goTo(currState, inputStringBuffer)!=null){
-//					System.out.println("currState: "+currState.getStateContentCharacter());
+					System.out.println("currState: "+currState.getStateContentCharacter());
 					try {
 						if(inputStringBuffer.length()==2){
 							prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
@@ -209,7 +209,7 @@ public class AhoCorasick {
 					try {
 						prepareOutput(currState, lineNumberCounter, columnNumberCounter);
 					} catch (Exception e) {}
-//					System.out.println("input: "+inputStringBuffer);
+					System.out.println("input: "+inputStringBuffer);
 				}else if(goTo(currState, inputStringBuffer)==null&&currState.equals(root)){
 					//shifting enforcer
 					try {
