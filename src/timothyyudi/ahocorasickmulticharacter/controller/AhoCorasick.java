@@ -17,6 +17,8 @@ public class AhoCorasick {
 	
 	public static HashMap<Integer, String> fullKeywordMap = new HashMap<>();
 	public static ArrayList<Output> outputList = new ArrayList<Output>();
+	static int SUPPORTSKIPPEDNODEFORFAIL=1;
+	static int SUPPORTSKIPPEDNODEFORSUCCESS=2;
 	
 	long ahoCorasickTimeTotal;
 	long ahoCorasickTimeFragment;
@@ -193,28 +195,32 @@ public class AhoCorasick {
 				
 				while (goTo(currState, inputStringBuffer)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
 					try {
-						prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);
+						if(inputStringBuffer.length()==2)
+//							prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter,1, AhoCorasick.SUPPORTSKIPPEDNODEFORFAIL);
+							prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter, 1);
 					} catch (Exception e) {}
 					
 					currState= failFrom(currState);
 				}
 				if(goTo(currState, inputStringBuffer)!=null){
-					System.out.println("currState: "+currState.getStateContentCharacter());
+//					System.out.println("currState: "+currState.getStateContentCharacter());
 					try {
-						if(inputStringBuffer.length()==2){
-							prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
-						}
+						if(inputStringBuffer.length()==2)
+//							prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
+							prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter,2);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
 					} catch (Exception e) {}
 					currState = goTo(currState, inputStringBuffer); //set the current node to the result of go to function
 					try {
-						prepareOutput(currState, lineNumberCounter, columnNumberCounter);
+//						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
+						prepareOutput(currState, lineNumberCounter, columnNumberCounter, 2);
 					} catch (Exception e) {}
-					System.out.println("input: "+inputStringBuffer);
+//					System.out.println("input: "+inputStringBuffer);
 				}else if(goTo(currState, inputStringBuffer)==null&&currState.equals(root)){
 					//shifting enforcer
 					try {
 						currState = goTo(currState, bufferStr1); //set the current node to the result of go to function
-						prepareOutput(currState, lineNumberCounter, columnNumberCounter);
+//						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
+						prepareOutput(currState, lineNumberCounter, columnNumberCounter, 2);
 					} catch (Exception e) {
 						currState = root;
 					}
@@ -236,14 +242,17 @@ public class AhoCorasick {
 	}
 	
 	/**prepare output for the matching keywords found*/
-	private void prepareOutput(State state,int lineNumber, int endColumnNumber){
+	private void prepareOutput(State state,int lineNumber, int endColumnNumber, int failNodeCase){
 		if(state.getFullKeywordHashCode()!=null){//jika currNode = fullword
+//			System.out.println("["+AhoCorasick.fullKeywordMap.get(state.getFullKeywordHashCode())+"] Output phase 1 called at stage "+stage);
 			outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
 		}
 		
-		while(!failFrom(state).equals(root)){//jika state tersebut punya fail node yang bukan root
+//		while(!failFrom(state).equals(root)&&failNodeCase==AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS){//jika state tersebut punya fail node yang bukan root
+		while(!failFrom(state).equals(root)&&failNodeCase==2){//jika state tersebut punya fail node yang bukan root
 			state = failFrom(state);
 			if(state.getFullKeywordHashCode()!=null){//jika failState == fullword
+//				System.out.println("["+AhoCorasick.fullKeywordMap.get(state.getFullKeywordHashCode())+"] Output phase 2 called at stage "+stage);
 				outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
 			}
 		}
