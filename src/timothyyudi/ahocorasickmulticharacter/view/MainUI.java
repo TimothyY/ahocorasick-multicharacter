@@ -1,7 +1,10 @@
 package timothyyudi.ahocorasickmulticharacter.view;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
 import timothyyudi.ahocorasickmulticharacter.controller.AhoCorasick;
@@ -9,10 +12,10 @@ import timothyyudi.ahocorasickmulticharacter.controller.Utility;
 
 public class MainUI {
 
+	public static long preprocessingTimer, processingTimer;
+	
 	public static void main(String[] args){
-		
-		long timer;
-		
+	
 		Utility util = new Utility();
 		
 		try {
@@ -71,20 +74,25 @@ public class MainUI {
 		
 		AhoCorasick ahoCorasick = new AhoCorasick();
 		
-		timer=System.currentTimeMillis();
+		preprocessingTimer = System.currentTimeMillis();
 		ahoCorasick.prepareGoToFunction(AhoCorasick.fullKeywordMap); //prepare ahocorasick goTo function
-		timer = System.currentTimeMillis() - timer;
-		System.out.println("Finish creating trie in "+timer + " millisecond(s)");
-		
-		timer=System.currentTimeMillis();
 		ahoCorasick.prepareFailFromFunction(); //prepare ahocorasick fail function
-		timer = System.currentTimeMillis() - timer;
-		System.out.println("Finish creating fail function in "+timer + " millisecond(s)");
-
+		ahoCorasick.prepare2Trie();
+		preprocessingTimer = System.currentTimeMillis() - preprocessingTimer;
+		System.out.println("Finish preprocessing "+2+"-multi character trie in "+preprocessingTimer + " millisecond(s)");
+		
+		// Get the Java runtime
+		Runtime runtime = Runtime.getRuntime();
+		// Run the garbage collector
+		runtime.gc();
+		// Calculate the used memory
+		long preprocessingMemory = runtime.totalMemory() - runtime.freeMemory();
+		System.out.println("Used memory for preprocessing in Bytes: " + preprocessingMemory);
+				
 		String inputString="";	//prepare input string
 		try {
 //			File f = new File("src/timothyyudi/ahocorasick/asset/kjv.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/kjv_bug.txt");			
+//			File f = new File("src/timothyyudi/ahocorasick/asset/kjv_bug.txt");
 			File f = new File("src/timothyyudi/ahocorasick/asset/snortrulesInputFile.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortrulesSimpleInputFile.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/SimpleInputString.txt");
@@ -92,50 +100,34 @@ public class MainUI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		int n=2; //force 2 multichar
-		System.out.println("Creating "+n+"-multi character trie");
-		timer=System.currentTimeMillis();
-		ahoCorasick.prepareNTrie(n);
-		timer = System.currentTimeMillis() - timer;
-		System.out.println("Finish creating "+n+"-multi character trie in "+timer + " millisecond(s)");
 		
-//		System.out.println("Creating "+n+"-multi character trie");
-//		timer=System.currentTimeMillis();
-//		try {
-//			ahoCorasick.walkthroughTrieAndPrint();
-//		} catch (Exception e) {
-//			System.out.println("walkthroughTrieAndPrint Error: "+e);
-//		}
-//		timer = System.currentTimeMillis() - timer;
-//		System.out.println("Finish creating "+n+"-multi character trie in "+timer + " millisecond(s)");
-		
-		System.out.println(""+n+"-multi character Aho Corasick is READY....BEGIN pattern matching...");
-		timer=System.currentTimeMillis();
+		System.out.println(""+2+"-multi character Aho Corasick is READY....BEGIN pattern matching...");
 		ahoCorasick.nPatternMatching(inputString);
-		timer = System.currentTimeMillis() - timer;
-		System.out.println("Finish multi-pattern matching in "+timer + " millisecond(s)");
+		System.out.println("Finish multi-pattern matching in "+processingTimer + " millisecond(s)");
 		
-		System.out.println("DONE matching...WRITING results...");
+		System.out.println("DONE matching...WRITING results now...");
 		
-		timer=System.currentTimeMillis();
 		try {
 			util.writeOutput(AhoCorasick.outputList);
 		} catch (Exception e) {
 			System.out.println("writeOutput Error: "+e);
 		}
-		timer = System.currentTimeMillis() - timer;
-		System.out.println("Finish writing results in "+timer + " millisecond(s)");
-		
 		System.out.println("COMPLETED");
 		
-		// Get the Java runtime
-		Runtime runtime = Runtime.getRuntime();
-		// Run the garbage collector
-		runtime.gc();
-		// Calculate the used memory
-		long memory = runtime.totalMemory() - runtime.freeMemory();
-		System.out.println("Used memory is bytes: " + memory);
+		try {
+		    PrintWriter preprocessTimerWriter = new PrintWriter(new BufferedWriter(new FileWriter("preprocessTimerAhoCorasickMultiCharacter.txt", true)));
+		    preprocessTimerWriter.println(""+preprocessingTimer);
+		    preprocessTimerWriter.close();
+		    PrintWriter preprocessMemoryWriter = new PrintWriter(new BufferedWriter(new FileWriter("preprocessMemoryAhoCorasickMultiCharacter.txt", true)));
+		    preprocessMemoryWriter.println(""+preprocessingMemory);
+		    preprocessMemoryWriter.close();
+		    PrintWriter processTimerWriter = new PrintWriter(new BufferedWriter(new FileWriter("processTimerAhoCorasickMultiCharacter.txt", true)));
+		    processTimerWriter.println(""+processingTimer);
+		    processTimerWriter.close();
+		} catch (IOException e) {
+		    //exception handling left as an exercise for the reader
+		}
+		
 	}
 	
 }
