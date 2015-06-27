@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 import timothyyudi.ahocorasickmulticharacter.model.Output;
+import timothyyudi.ahocorasickmulticharacter.view.MainUI;
 
 public class Utility {
 
@@ -71,7 +72,7 @@ public class Utility {
 	}
 	
 	public void writeAhoCorasickTime(long ahoCorasickTime){
-		System.out.println("[TRUE] AhoCorasick Time: "+ahoCorasickTime+" ms");
+		MainUI.processingTimer = ahoCorasickTime;
 	}
 	
 }

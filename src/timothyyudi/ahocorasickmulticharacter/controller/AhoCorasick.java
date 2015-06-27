@@ -101,7 +101,7 @@ public class AhoCorasick {
 		}
 	}
 	
-	public void prepareNTrie(int multicharNumber){
+	public void prepare2Trie(){
 		
 		LinkedList<State> oriStateQueue = walkthroughTrie();
 		LinkedList<State> oriStateQueueForPhase1 = new LinkedList<>(oriStateQueue); 
@@ -193,28 +193,28 @@ public class AhoCorasick {
 				
 				while (goTo(currState, inputStringBuffer)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
 					try {
-						prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);
+						if(inputStringBuffer.length()==2)
+							prepareOutputFail(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);
 					} catch (Exception e) {}
 					
 					currState= failFrom(currState);
 				}
 				if(goTo(currState, inputStringBuffer)!=null){
-					System.out.println("currState: "+currState.getStateContentCharacter());
 					try {
-						if(inputStringBuffer.length()==2){
-							prepareOutput(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
-						}
+						if(inputStringBuffer.length()==2)
+							prepareOutputSuccess(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
 					} catch (Exception e) {}
 					currState = goTo(currState, inputStringBuffer); //set the current node to the result of go to function
 					try {
-						prepareOutput(currState, lineNumberCounter, columnNumberCounter);
+//						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
+						prepareOutputSuccess(currState, lineNumberCounter, columnNumberCounter);
 					} catch (Exception e) {}
-					System.out.println("input: "+inputStringBuffer);
-				}else if(goTo(currState, inputStringBuffer)==null&&currState.equals(root)){
-					//shifting enforcer
+//					System.out.println("input: "+inputStringBuffer);
+				}else if(goTo(currState, inputStringBuffer)==null&&currState.equals(root)){	//shifting enforcer
 					try {
 						currState = goTo(currState, bufferStr1); //set the current node to the result of go to function
-						prepareOutput(currState, lineNumberCounter, columnNumberCounter);
+//						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
+						prepareOutputSuccess(currState, lineNumberCounter, columnNumberCounter);
 					} catch (Exception e) {
 						currState = root;
 					}
@@ -236,11 +236,17 @@ public class AhoCorasick {
 	}
 	
 	/**prepare output for the matching keywords found*/
-	private void prepareOutput(State state,int lineNumber, int endColumnNumber){
+	private void prepareOutputFail(State state,int lineNumber, int endColumnNumber){
 		if(state.getFullKeywordHashCode()!=null){//jika currNode = fullword
 			outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
 		}
-		
+	}
+	
+	/**prepare output for the matching keywords found*/
+	private void prepareOutputSuccess(State state,int lineNumber, int endColumnNumber){
+		if(state.getFullKeywordHashCode()!=null){//jika currNode = fullword
+			outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
+		}
 		while(!failFrom(state).equals(root)){//jika state tersebut punya fail node yang bukan root
 			state = failFrom(state);
 			if(state.getFullKeywordHashCode()!=null){//jika failState == fullword
@@ -248,4 +254,5 @@ public class AhoCorasick {
 			}
 		}
 	}
+	
 }
