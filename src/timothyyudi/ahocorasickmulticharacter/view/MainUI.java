@@ -23,7 +23,7 @@ public class MainUI {
 //			keywords = util.readKeyword("c:/temp/kjvkeyword_simple.txt"); //load keywords from file
 //			File f = new File("src/timothyyudi/ahocorasick/asset/kjvkeyword_simple.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortrules.txt");
-			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword.txt");
+//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0100.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0200.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0300.txt");
@@ -43,7 +43,7 @@ public class MainUI {
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1700.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1800.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1900.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2000.txt");
+			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2000.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2100.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2200.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2300.txt");
