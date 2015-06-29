@@ -17,54 +17,138 @@ public class MainUI {
 	public static void main(String[] args){
 	
 		Utility util = new Utility();
+		File f;
 		
 		try {
-//			keywords = util.readKeyword("c:/temp/snortrules.txt"); //load keywords from file
-//			keywords = util.readKeyword("c:/temp/kjvkeyword_simple.txt"); //load keywords from file
+			switch (args[0]) {
+			case "100":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0100.txt");
+				break;
+			case "200":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0200.txt");
+				break;
+			case "300":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0300.txt");
+				break;
+			case "400":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0400.txt");
+				break;
+			case "500":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0500.txt");
+				break;
+			case "600":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0600.txt");
+				break;
+			case "700":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0700.txt");
+				break;
+			case "800":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0800.txt");
+				break;
+			case "900":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0900.txt");
+				break;
+			case "1000":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1000.txt");
+				break;
+			case "1100":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1100.txt");
+				break;
+			case "1200":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1200.txt");
+				break;
+			case "1300":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1300.txt");
+				break;
+			case "1400":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1400.txt");
+				break;
+			case "1500":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1500.txt");
+				break;
+			case "1600":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1600.txt");
+				break;
+			case "1700":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1700.txt");
+				break;
+			case "1800":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1800.txt");
+				break;
+			case "1900":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1900.txt");
+				break;
+			case "2000":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2000.txt");
+				break;
+			case "2100":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2100.txt");
+				break;
+			case "2200":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2200.txt");
+				break;
+			case "2300":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2300.txt");
+				break;
+			case "2400":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2400.txt");
+				break;
+			case "2500":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2500.txt");
+				break;
+			case "2600":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2600.txt");
+				break;
+			case "2700":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2700.txt");
+				break;
+			case "2800":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2800.txt");
+				break;
+			case "2900":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2900.txt");
+				break;
+			case "3000":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3000.txt");
+				break;
+			case "3100":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3100.txt");
+				break;
+			case "3200":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3200.txt");
+				break;
+			case "3300":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3300.txt");
+				break;
+			case "3400":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3400.txt");
+				break;
+			case "3500":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3500.txt");
+				break;
+			case "3600":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3600.txt");
+				break;
+			case "3700":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3700.txt");
+				break;
+			case "3800":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3800.txt");
+				break;
+			case "3900":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3900.txt");
+				break;
+			case "4000":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword4000.txt");
+				break;
+			default:
+				f = new File("src/timothyyudi/ahocorasick/asset/snortrulessimplekeyword.txt");
+				break;
+			}
+			
 //			File f = new File("src/timothyyudi/ahocorasick/asset/kjvkeyword_simple.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortrules.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0100.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0200.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0300.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0400.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0500.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0600.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0700.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0800.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword0900.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1000.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1100.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1200.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1300.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1400.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1500.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1600.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1700.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1800.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword1900.txt");
-			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2000.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2100.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2200.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2300.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2400.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2500.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2600.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2700.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2800.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword2900.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3000.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3100.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3200.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3300.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3400.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3500.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3600.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3700.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3800.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword3900.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortruleskeyword4000.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortrulessimplekeyword.txt");
 //			File f = new File("src/timothyyudi/ahocorasick/asset/SimpleDatabase.txt");
 			util.readKeyword(f); //load keywords from file
 			
@@ -91,11 +175,17 @@ public class MainUI {
 				
 		String inputString="";	//prepare input string
 		try {
-//			File f = new File("src/timothyyudi/ahocorasick/asset/kjv.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/kjv_bug.txt");
-			File f = new File("src/timothyyudi/ahocorasick/asset/snortrulesInputFile.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/snortrulesSimpleInputFile.txt");
-//			File f = new File("src/timothyyudi/ahocorasick/asset/SimpleInputString.txt");
+//			f = new File("src/timothyyudi/ahocorasick/asset/kjv.txt");
+//			f = new File("src/timothyyudi/ahocorasick/asset/kjv_bug.txt");			
+//			f = new File("src/timothyyudi/ahocorasick/asset/SimpleInputString.txt");
+			switch (args[0]) {
+			case "simple":
+				f = new File("src/timothyyudi/ahocorasick/asset/snortrulesSimpleInputFile.txt");
+				break;
+			default:
+				f = new File("src/timothyyudi/ahocorasick/asset/snortrulesInputFile.txt");
+				break;
+			}
 			inputString = util.readInputString(f, Charset.defaultCharset());
 		} catch (IOException e) {
 			e.printStackTrace();
