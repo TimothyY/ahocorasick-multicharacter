@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import timothyyudi.ahocorasickmulticharacter.model.LiteratedStatePointer;
 import timothyyudi.ahocorasickmulticharacter.model.Output;
 import timothyyudi.ahocorasickmulticharacter.model.State;
 
 public class AhoCorasick {
 
 	State root;
-	LiteratedStatePointer literatedRoot;
 	State currState;
 	int keywordInsertionCounter, lineNumberCounter, columnNumberCounter;
 	
@@ -22,12 +20,11 @@ public class AhoCorasick {
 	long ahoCorasickTimeFragment;
 	long algoStart, algoEnd;
 	
-	String inputString, bufferStr0, bufferStr1;
+//	String inputString
+	String bufferStr0, bufferStr1;
 	
 	public AhoCorasick(){
 		root= new State();
-		literatedRoot = new LiteratedStatePointer();
-		literatedRoot.setState(root);
 	}
 	
 	/**A function to move from 1 node of a trie to the others based on next input character*/
@@ -104,7 +101,7 @@ public class AhoCorasick {
 	public void prepare2Trie(){
 		
 		LinkedList<State> oriStateQueue = walkthroughTrie();
-		LinkedList<State> oriStateQueueForPhase1 = new LinkedList<>(oriStateQueue); 
+//		LinkedList<State> oriStateQueueForPhase1 = new LinkedList<>(oriStateQueue); 
 		LinkedList<State> oriStateQueueForPhase2 = new LinkedList<>(oriStateQueue); 
 		
 		State tempState; //aka Si, placeholder for loop.
@@ -164,7 +161,7 @@ public class AhoCorasick {
 	/**A function to match input string against constructed AhoCorasick trie*/
 	public void nPatternMatching(String inputString){
 		
-		this.inputString = inputString;
+//		this.inputString = inputString;
 		
 		currState = root;
 		lineNumberCounter=1;
