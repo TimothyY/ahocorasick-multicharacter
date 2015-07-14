@@ -272,6 +272,12 @@ public class MainUI {
 				output_InProcessTimeURI = output_Home+"AhoCorasick_MC_InProcessTime4000.txt";
 				output_ProcessMemoryURI = output_Home+"AhoCorasick_MC_ProcessMemory4000.txt";
 				break;
+			case "kjvcustom":
+				f = new File(asset_Home+"snortruleskeyword4000.txt");
+				output_PreProcessTimeURI = output_Home+"AhoCorasick_PreProcessTimekjvcustom.txt";
+				output_InProcessTimeURI = output_Home+"AhoCorasick_InProcessTimekjvcustom.txt";
+				output_ProcessMemoryURI = output_Home+"AhoCorasick_ProcessMemorykjvcustom.txt";
+				break;
 			default:
 				f = new File(asset_Home+"snortrulessimplekeyword.txt");
 				output_PreProcessTimeURI = output_Home+"AhoCorasick_MC_PreProcessTimeSimple.txt";
@@ -315,6 +321,9 @@ public class MainUI {
 //			f = new File(asset_Home+"kjv_bug.txt");			
 //			f = new File(asset_Home+"SimpleInputString.txt");
 			switch (args[0]) {
+			case "kjvcustom":
+				f = new File(asset_Home+"kjv_custom.txt");
+				break;
 			case "simple":
 				f = new File(asset_Home+"snortrulesSimpleInputFile.txt");
 				break;
