@@ -170,7 +170,7 @@ public class AhoCorasick {
 		int inputStringLength = inputString.length();
 		int inputStringLastPosition = inputStringLength -1;
 		
-		algoStart=System.nanoTime();
+//		algoStart=System.nanoTime();
 		for (int i = 0; i < inputStringLength; i++) { //as long as there is an input
 			
 			columnNumberCounter++;
@@ -185,8 +185,8 @@ public class AhoCorasick {
 			
 			if(inputStringBuffer.length()==2 || i==inputStringLastPosition){
 				
-//				algoStart=System.currentTimeMillis();
-//				algoStart=System.nanoTime();
+				algoStart=System.currentTimeMillis();
+				algoStart=System.nanoTime();
 				
 				bufferStr0 = ""+inputStringBuffer.charAt(0);
 				
@@ -218,22 +218,21 @@ public class AhoCorasick {
 						currState = root;
 					}
 				}
-				
-
-//				algoEnd=System.currentTimeMillis();
-//				algoEnd=System.nanoTime();
-//				ahoCorasickTimeFragment=algoEnd-algoStart;
-//				ahoCorasickTimeTotal+=ahoCorasickTimeFragment;
-				
+								
 				//do some xploration and search
 				inputStringBuffer = ""; //reset buffer
+				
+				algoEnd=System.nanoTime();
+				ahoCorasickTimeFragment=algoEnd-algoStart;
+				ahoCorasickTimeTotal+=ahoCorasickTimeFragment;
+
 			}
 
 		}
-		algoEnd=System.nanoTime();
+//		algoEnd=System.nanoTime();
 		Utility util = new Utility();
-//		util.writeAhoCorasickTime(ahoCorasickTimeTotal);
-		util.writeAhoCorasickTime(algoEnd-algoStart);
+		util.writeAhoCorasickTime(ahoCorasickTimeTotal);
+//		util.writeAhoCorasickTime(algoEnd-algoStart);
 	}
 	
 	/**prepare output for the matching keywords found*/
