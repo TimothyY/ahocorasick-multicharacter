@@ -185,7 +185,6 @@ public class AhoCorasick {
 			
 			if(inputStringBuffer.length()==2 || i==inputStringLastPosition){
 				
-				algoStart=System.currentTimeMillis();
 				algoStart=System.nanoTime();
 				
 				bufferStr0 = ""+inputStringBuffer.charAt(0);
