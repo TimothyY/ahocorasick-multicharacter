@@ -21,7 +21,7 @@ public class MainUI {
 		
 //		String asset_Home = "src/timothyyudi/ahocorasick/asset/"; //to run anywhere
 		String asset_Home = "C:\\Java AhoCorasick\\Asset\\"; //to run externally
-		String output_Home = "C:\\Java AhoCorasick\\AhoCorasick_MC Results\\";
+		String output_Home = "C:\\Java AhoCorasick\\AhoCorasickMC Results\\";
 		String output_PreProcessTimeURI="", output_InProcessTimeURI="", output_ProcessMemoryURI="";
 
 		try {
