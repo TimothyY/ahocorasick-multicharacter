@@ -185,7 +185,7 @@ public class AhoCorasick {
 			
 			if(inputStringBuffer.length()==2 || i==inputStringLastPosition){
 				
-//				algoStart=System.nanoTime();
+				algoStart=System.nanoTime();
 				
 				bufferStr0 = ""+inputStringBuffer.charAt(0);
 				
@@ -221,17 +221,17 @@ public class AhoCorasick {
 				//do some xploration and search
 				inputStringBuffer = ""; //reset buffer
 				
-//				algoEnd=System.nanoTime();
-//				ahoCorasickTimeFragment=algoEnd-algoStart;
-//				ahoCorasickTimeTotal+=ahoCorasickTimeFragment;
+				algoEnd=System.nanoTime();
+				ahoCorasickTimeFragment=algoEnd-algoStart;
+				ahoCorasickTimeTotal+=ahoCorasickTimeFragment;
 
 			}
 
 		}
-		algoEnd=System.nanoTime();
+//		algoEnd=System.nanoTime();
 		Utility util = new Utility();
-//		util.writeAhoCorasickTime(ahoCorasickTimeTotal);
-		util.writeAhoCorasickTime(algoEnd-algoStart);
+		util.writeAhoCorasickTime(ahoCorasickTimeTotal);
+//		util.writeAhoCorasickTime(algoEnd-algoStart);
 	}
 	
 	/**prepare output for the matching keywords found*/

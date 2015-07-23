@@ -328,7 +328,8 @@ public class MainUI {
 				f = new File(asset_Home+"snortrulesSimpleInputFile.txt");
 				break;
 			default:
-				f = new File(asset_Home+"snortrulesInputFile.txt");
+//				f = new File(asset_Home+"snortrulesInputFile.txt");
+				f = new File(asset_Home+"red1.3.txt");
 				break;
 			}
 			inputString = util.readInputString(f, Charset.defaultCharset());
