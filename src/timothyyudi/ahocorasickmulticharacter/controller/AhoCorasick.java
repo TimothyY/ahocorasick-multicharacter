@@ -185,7 +185,6 @@ public class AhoCorasick {
 			
 			if(inputStringBuffer.length()==2 || i==inputStringLastPosition){
 				
-//				algoStart=System.currentTimeMillis();
 				algoStart=System.nanoTime();
 				
 				bufferStr0 = ""+inputStringBuffer.charAt(0);
@@ -218,15 +217,15 @@ public class AhoCorasick {
 						currState = root;
 					}
 				}
+								
+				//do some xploration and search
+				inputStringBuffer = ""; //reset buffer
 				
 
-//				algoEnd=System.currentTimeMillis();
 				algoEnd=System.nanoTime();
 				ahoCorasickTimeFragment=algoEnd-algoStart;
 				ahoCorasickTimeTotal+=ahoCorasickTimeFragment;
 				
-				//do some xploration and search
-				inputStringBuffer = ""; //reset buffer
 			}
 
 		}
