@@ -17,7 +17,7 @@ public class MainUI {
 	public static void main(String[] args){
 	
 		Utility util = new Utility();
-		File f;
+		File f = null;
 		
 //		String asset_Home = "src/timothyyudi/ahocorasick/asset/"; //to run anywhere
 		String asset_Home = "C:\\Java AhoCorasick\\Asset\\"; //to run externally
@@ -297,7 +297,6 @@ public class MainUI {
 		
 		AhoCorasick ahoCorasick = new AhoCorasick();
 		
-//		preprocessingTimer = System.currentTimeMillis();
 		preprocessingTimer = System.nanoTime();
 		ahoCorasick.prepareGoToFunction(AhoCorasick.fullKeywordMap); //prepare ahocorasick goTo function
 		ahoCorasick.prepareFailFromFunction(); //prepare ahocorasick fail function
@@ -309,8 +308,6 @@ public class MainUI {
 		
 		// Get the Java runtime
 		Runtime runtime = Runtime.getRuntime();
-		// Run the garbage collector
-		runtime.gc();
 		// Calculate the used memory
 		long preprocessingMemory = runtime.totalMemory() - runtime.freeMemory();
 		System.out.println("Used memory for preprocessing: " + preprocessingMemory+" Bytes");
@@ -328,17 +325,19 @@ public class MainUI {
 				f = new File(asset_Home+"snortrulesSimpleInputFile.txt");
 				break;
 			default:
-//				f = new File(asset_Home+"snortrulesInputFile.txt");
-				f = new File(asset_Home+"red1.3.txt");
+				f = new File(asset_Home+"snortrulesInputFile.txt");
+//				f = new File(asset_Home+"hbot.txt");
+//				f = new File(asset_Home+"slowdownload.txt");
+//				f = new File(asset_Home+"m_orange3.1_100.txt");
 				break;
 			}
-			inputString = util.readInputString(f, Charset.defaultCharset());
-		} catch (IOException e) {
+//			inputString = util.readInputString(f, Charset.defaultCharset());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		System.out.println(""+2+"-multi character Aho Corasick is READY....BEGIN pattern matching...");
-		ahoCorasick.nPatternMatching(inputString);
+		ahoCorasick.nPatternMatching(f);
 		System.out.println("Finish multi-pattern matching in "+processingTimer + " nanosecond(s)");
 		
 		System.out.println("DONE matching...WRITING results now...");

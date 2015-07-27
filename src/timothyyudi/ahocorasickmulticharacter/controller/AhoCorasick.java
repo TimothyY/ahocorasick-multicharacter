@@ -1,5 +1,9 @@
 package timothyyudi.ahocorasickmulticharacter.controller;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -159,80 +163,65 @@ public class AhoCorasick {
 	}
 	
 	/**A function to match input string against constructed AhoCorasick trie*/
-	public void nPatternMatching(String inputString){
-		
-//		this.inputString = inputString;
+	public void nPatternMatching(File inputFile){
 		
 		currState = root;
 		lineNumberCounter=1;
 		columnNumberCounter=1;
 		String inputStringBuffer="";
-		int inputStringLength = inputString.length();
-		int inputStringLastPosition = inputStringLength -1;
+		char[] cBuf = new char[2];
+		String sBuf = null;
 		
-//		algoStart=System.nanoTime();
-		for (int i = 0; i < inputStringLength; i++) { //as long as there is an input
-			
-			columnNumberCounter++;
-			if(inputString.charAt(i)=='\n'){
-//				System.out.println("processing line: "+lineNumberCounter);
-				lineNumberCounter++;
-				columnNumberCounter=1;
-			}
+		algoStart=System.nanoTime();
+		try {
+			FileReader fileReader = new FileReader(inputFile);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			while (bufferedReader.read(cBuf, 0, 2) != -1) {
+				sBuf = String.valueOf(cBuf);
+				
+				columnNumberCounter+=2;
+				if(sBuf.equals("\n")){
+					lineNumberCounter++;
+					columnNumberCounter=1;
+				}
 
-			bufferStr1 = ""+inputString.charAt(i);
-			inputStringBuffer = inputStringBuffer + bufferStr1;
-			
-			if(inputStringBuffer.length()==2 || i==inputStringLastPosition){
-				
-				algoStart=System.nanoTime();
-				
-				bufferStr0 = ""+inputStringBuffer.charAt(0);
-				
-				while (goTo(currState, inputStringBuffer)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
+				while (goTo(currState, sBuf)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
 					try {
-						if(inputStringBuffer.length()==2)
-							prepareOutputFail(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);
+						if(sBuf.length()==2)
+							prepareOutputFail(currState.getNextStateCollection().get(Character.toString(cBuf[0])), lineNumberCounter, columnNumberCounter);
 					} catch (Exception e) {}
 					
 					currState= failFrom(currState);
 				}
-				if(goTo(currState, inputStringBuffer)!=null){
+				if(goTo(currState, sBuf)!=null){
 					try {
-						if(inputStringBuffer.length()==2)
-							prepareOutputSuccess(currState.getNextStateCollection().get(bufferStr0), lineNumberCounter, columnNumberCounter);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
+						if(sBuf.length()==2)
+							prepareOutputSuccess(currState.getNextStateCollection().get(Character.toString(cBuf[0])), lineNumberCounter, columnNumberCounter);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
 					} catch (Exception e) {}
-					currState = goTo(currState, inputStringBuffer); //set the current node to the result of go to function
+					currState = goTo(currState, sBuf); //set the current node to the result of go to function
 					try {
 //						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
 						prepareOutputSuccess(currState, lineNumberCounter, columnNumberCounter);
 					} catch (Exception e) {}
 //					System.out.println("input: "+inputStringBuffer);
-				}else if(goTo(currState, inputStringBuffer)==null&&currState.equals(root)){	//shifting enforcer
+				}else if(goTo(currState, sBuf)==null&&currState.equals(root)){	//shifting enforcer
 					try {
-						currState = goTo(currState, bufferStr1); //set the current node to the result of go to function
+						currState = goTo(currState, Character.toString(cBuf[1])); //set the current node to the result of go to function
 //						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
 						prepareOutputSuccess(currState, lineNumberCounter, columnNumberCounter);
 					} catch (Exception e) {
 						currState = root;
 					}
 				}
-								
-				//do some xploration and search
-				inputStringBuffer = ""; //reset buffer
-				
-
-				algoEnd=System.nanoTime();
-				ahoCorasickTimeFragment=algoEnd-algoStart;
-				ahoCorasickTimeTotal+=ahoCorasickTimeFragment;
 				
 			}
-
+			fileReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-//		algoEnd=System.nanoTime();
-		Utility util = new Utility();
-		util.writeAhoCorasickTime(ahoCorasickTimeTotal);
-//		util.writeAhoCorasickTime(algoEnd-algoStart);
+		algoEnd = System.nanoTime();
+		Utility.writeAhoCorasickTime(algoEnd-algoStart);
+		
 	}
 	
 	/**prepare output for the matching keywords found*/

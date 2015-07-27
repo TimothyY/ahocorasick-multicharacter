@@ -71,7 +71,7 @@ public class Utility {
 		writer.close();
 	}
 	
-	public void writeAhoCorasickTime(long ahoCorasickTime){
+	public static void writeAhoCorasickTime(long ahoCorasickTime){
 		MainUI.processingTimer = ahoCorasickTime;
 	}
 	
