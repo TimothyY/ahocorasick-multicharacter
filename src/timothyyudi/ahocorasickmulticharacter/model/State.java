@@ -18,7 +18,7 @@ public class State {
 		this.failState = null;
 		this.fullKeywordHashCode = null;
 		this.fullKeywordHashCodeList = null;
-		this.nextStateCollection = null;
+		this.nextStateCollection = new HashMap<String,State>();
 	}
 
 	/**Called each time a new state is created*/
@@ -28,7 +28,7 @@ public class State {
 		this.failState = failState;
 		this.fullKeywordHashCode = null;
 		this.fullKeywordHashCodeList = null;
-		this.nextStateCollection = null;
+		this.nextStateCollection = new HashMap<String,State>();
 	}
 	
 	public String getStateContentCharacter() {
