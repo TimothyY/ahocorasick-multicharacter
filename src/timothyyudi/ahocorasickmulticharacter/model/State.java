@@ -18,17 +18,17 @@ public class State {
 		this.failState = null;
 		this.fullKeywordHashCode = null;
 		this.fullKeywordHashCodeList = null;
-		this.nextStateCollection = new HashMap<String,State>();
+		this.nextStateCollection = null;
 	}
 
 	/**Called each time a new state is created*/
-	public State(State parent, String stateContentCharacter, State failState){
+	public State(String stateContentCharacter, State failState){
 		super();
 		this.stateContentCharacter = stateContentCharacter;
 		this.failState = failState;
 		this.fullKeywordHashCode = null;
 		this.fullKeywordHashCodeList = null;
-		this.nextStateCollection = new HashMap<String,State>();
+		this.nextStateCollection = null;
 	}
 	
 	public String getStateContentCharacter() {

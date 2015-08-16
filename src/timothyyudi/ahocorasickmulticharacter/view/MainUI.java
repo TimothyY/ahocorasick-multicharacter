@@ -298,7 +298,6 @@ public class MainUI {
 		AhoCorasick ahoCorasick = new AhoCorasick();
 		
 		preprocessingTimer = System.nanoTime();
-		ahoCorasick.preparePrintableASCII();
 		ahoCorasick.prepareGoToFunction(AhoCorasick.fullKeywordMap); //prepare ahocorasick goTo function
 		ahoCorasick.prepareFailFromFunction(); //prepare ahocorasick fail function
 		ahoCorasick.prepare2Trie();
