@@ -172,12 +172,11 @@ public class AhoCorasick {
 		char[] cBuf = new char[2];
 		String sBuf = null;
 		
-//		algoStart=System.nanoTime();
+		algoStart=System.nanoTime();
 		try {
 			FileReader fileReader = new FileReader(inputFile);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			while (bufferedReader.read(cBuf, 0, 2) != -1) {
-				algoStart=System.nanoTime();
 				sBuf = String.valueOf(cBuf);
 				
 				columnNumberCounter+=2;
@@ -214,16 +213,13 @@ public class AhoCorasick {
 						currState = root;
 					}
 				}
-				algoEnd = System.nanoTime();
-				ahoCorasickTimeTotal+=(algoEnd-algoStart);
 			}
 			fileReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		algoEnd = System.nanoTime();
-//		Utility.writeAhoCorasickTime(algoEnd-algoStart);
-		Utility.writeAhoCorasickTime(ahoCorasickTimeTotal);
+		algoEnd = System.nanoTime();
+		Utility.writeAhoCorasickTime(algoEnd-algoStart);
 		
 	}
 	
