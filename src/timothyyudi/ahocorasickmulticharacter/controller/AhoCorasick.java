@@ -19,7 +19,6 @@ public class AhoCorasick {
 	
 	public static HashMap<Integer, String> fullKeywordMap = new HashMap<>();
 	public static ArrayList<Output> outputList = new ArrayList<Output>();
-	public static ArrayList<String> printableASCIIList = new ArrayList<>();
 	
 	long ahoCorasickTimeTotal;
 	long ahoCorasickTimeFragment;
@@ -30,29 +29,6 @@ public class AhoCorasick {
 	
 	public AhoCorasick(){
 		root= new State();
-	}
-	
-	public void preparePrintableASCII() {
-		String tempPrintableASCII = "";
-		printableASCIIList.add(tempPrintableASCII);
-		tempPrintableASCII = "\n";
-		printableASCIIList.add(tempPrintableASCII);
-		tempPrintableASCII = "\r";
-		printableASCIIList.add(tempPrintableASCII);
-		
-		for(int i=32;i<127;i++){ //printable ascii
-			tempPrintableASCII = Character.toString((char)i);
-			printableASCIIList.add(tempPrintableASCII);
-		}
-//		System.out.println(printableASCIIList.size());
-	}
-	
-	public void prepareNaiveAlpha(){
-		root.setNextStateCollection(new HashMap<>());
-		for (String printableASCII : printableASCIIList) {
-			root.getNextStateCollection().put(printableASCII, new State(printableASCII, root));
-		}
-//		System.out.println("rootchild size: "+root.getNextStateCollection().size());
 	}
 	
 	/**A function to move from 1 node of a trie to the others based on next input character*/
@@ -75,9 +51,7 @@ public class AhoCorasick {
 	private void enterKeyword(String keyword){
 		currState = root;
 		keywordInsertionCounter = 0;
-		String initialCharacter = Character.toString(keyword.charAt(0));
-		State naiveAlphaState;
-		
+
 		while(keywordInsertionCounter<keyword.length() && goTo(currState, Character.toString(keyword.charAt(keywordInsertionCounter)))!=null){ //while state already exist then go there.
 			currState = goTo(currState, Character.toString(keyword.charAt(keywordInsertionCounter)));
 			keywordInsertionCounter++;
@@ -85,38 +59,14 @@ public class AhoCorasick {
 	
 		while(keywordInsertionCounter<keyword.length() && goTo(currState, Character.toString(keyword.charAt(keywordInsertionCounter)))==null){ //while state doesnt exist then create new node and go there
 			if(currState.getNextStateCollection()==null)currState.setNextStateCollection(new HashMap<String,State>());
-				currState.getNextStateCollection().put(Character.toString(keyword.charAt(keywordInsertionCounter)), new State(Character.toString(keyword.charAt(keywordInsertionCounter)), root));
+			currState.getNextStateCollection().put(Character.toString(keyword.charAt(keywordInsertionCounter)), new State(currState, Character.toString(keyword.charAt(keywordInsertionCounter)), root));
 			currState = goTo(currState, Character.toString(keyword.charAt(keywordInsertionCounter)));
-			
+			if(keywordInsertionCounter==keyword.length()-1){
+				currState.setFullKeywordHashCode(keyword.hashCode());
+			}
 			keywordInsertionCounter++;
 		}
 		
-		if(keywordInsertionCounter==keyword.length()){
-			currState.setFullKeywordHashCode(keyword.hashCode());
-//			System.out.println("Finale: "+currState.getStateContentCharacter());
-		}
-
-		//add naive omega
-		if(currState.getNextStateCollection()==null) {
-			currState.setNextStateCollection(new HashMap<>());
-		}
-		
-		currState.getNextStateCollection().putIfAbsent("", new State("", root));
-		currState.getNextStateCollection().putIfAbsent("\n", new State("\n", root));
-		currState.getNextStateCollection().putIfAbsent("\r", new State("\r", root));
-		for (int i = 32; i < 127; i++) {
-			currState.getNextStateCollection().putIfAbsent(Character.toString((char)i), new State(Character.toString((char)i), root));
-		}
-		
-//		System.out.println(currState.getNextStateCollection().size());
-		
-		//add naive alpha @root
-//		System.out.println("inserting "+keyword);
-//		System.out.println("root child size: "+root.getNextStateCollection().size());
-		for (State rootChildState : root.getNextStateCollection().values()) {
-			if(rootChildState.getNextStateCollection()==null)rootChildState.setNextStateCollection(new HashMap<String,State>());
-			rootChildState.getNextStateCollection().putIfAbsent(initialCharacter, new State(initialCharacter, root));
-		}
 	}
 	
 	/**A function to move from 1 node of a trie to it's fail node*/
@@ -160,8 +110,7 @@ public class AhoCorasick {
 		
 		State tempState; //aka Si, placeholder for loop.
 		HashMap<String, State> tempNextLiteratedStatePointerMap;
-		String tempNewPattern="";
-		
+				
 		// [Phase 2] Start creating derivation node
 		while(!oriStateQueueForPhase2.isEmpty()) {
 			tempState=oriStateQueueForPhase2.pop();
@@ -175,14 +124,9 @@ public class AhoCorasick {
 					HashMap<String, State> stateNXiChilds = stateNXi.getNextStateCollection();//contoh anak node level 1
 					if(stateNXiChilds!=null){//???
 						for (State stateNXj : stateNXiChilds.values()) {//BEGIN 5th phase//ada 2 node baru dengan multichar di queuetmpset
-							tempNewPattern = stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter();
-							tempNextLiteratedStatePointerMap.putIfAbsent(tempNewPattern, stateNXj);
-							//implementasi fullKeywordHashCodeList pada state kedua
-							if(stateNXj.getFullKeywordHashCodeList()==null)stateNXj.setFullKeywordHashCodeList(new ArrayList<>());
-							stateNXj.getFullKeywordHashCodeList().add(stateNXi.getFullKeywordHashCode());
-							stateNXj.getFullKeywordHashCodeList().add(stateNXj.getFullKeywordHashCode());
-//							System.out.println(stateNXi.getStateContentCharacter()+": "+stateNXi.getNextStateCollection().size());
-//							System.out.println(tempNewPattern+" state created");
+							String newPattern = stateNXi.getStateContentCharacter()+stateNXj.getStateContentCharacter();
+							tempNextLiteratedStatePointerMap.put(newPattern, stateNXj);
+							//bisa improve dengan masukin implementasi fullKeywordHashCodeList
 						}//END 5th phase
 					}
 					//mungkin bisa improve dengan add fullKeyword dari failnode di sini kekny salah tempat
@@ -218,150 +162,89 @@ public class AhoCorasick {
 		return resultQueue;
 	}
 	
-//	/**A function to match input string against constructed AhoCorasick trie*/
-//	public void nPatternMatching(File inputFile){
-//		
-//		currState = root;
-//		lineNumberCounter=1;
-//		columnNumberCounter=1;
-//		String inputStringBuffer="";
-//		char[] cBuf = new char[2];
-//		String sBuf = null;
-//		
-//		algoStart=System.nanoTime();
-//		try {
-//			FileReader fileReader = new FileReader(inputFile);
-//			BufferedReader bufferedReader = new BufferedReader(fileReader);
-//			while (bufferedReader.read(cBuf, 0, 2) != -1) {
-//				sBuf = String.valueOf(cBuf);
-//				
-//				columnNumberCounter+=2;
-//				if(sBuf.equals("\n")){
-//					lineNumberCounter++;
-//					columnNumberCounter=1;
-//				}
-//
-//				while (goTo(currState, sBuf)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
-//					try {
-//						if(sBuf.length()==2)
-//							prepareOutputFail(currState.getNextStateCollection().get(Character.toString(cBuf[0])), lineNumberCounter, columnNumberCounter);
-//					} catch (Exception e) {}
-//					
-//					currState= failFrom(currState);
-//				}
-//				if(goTo(currState, sBuf)!=null){
-//					try {
-//						if(sBuf.length()==2)
-//							prepareOutputSuccess(currState.getNextStateCollection().get(Character.toString(cBuf[0])), lineNumberCounter, columnNumberCounter);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
-//					} catch (Exception e) {}
-//					currState = goTo(currState, sBuf); //set the current node to the result of go to function
-//					try {
-////						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
-//						prepareOutputSuccess(currState, lineNumberCounter, columnNumberCounter);
-//					} catch (Exception e) {}
-////					System.out.println("input: "+inputStringBuffer);
-//				}else if(goTo(currState, sBuf)==null&&currState.equals(root)){	//shifting enforcer
-//					try {
-//						currState = goTo(currState, Character.toString(cBuf[1])); //set the current node to the result of go to function
-////						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
-//						prepareOutputSuccess(currState, lineNumberCounter, columnNumberCounter);
-//					} catch (Exception e) {
-//						currState = root;
-//					}
-//				}
-//			}
-//			fileReader.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		algoEnd = System.nanoTime();
-//		Utility.writeAhoCorasickTime(algoEnd-algoStart);
-//		
-//	}
-
 	/**A function to match input string against constructed AhoCorasick trie*/
 	public void nPatternMatching(File inputFile){
 		
 		currState = root;
 		lineNumberCounter=1;
 		columnNumberCounter=1;
+		String inputStringBuffer="";
 		char[] cBuf = new char[2];
 		String sBuf = null;
 		
-		algoStart=System.nanoTime();
+//		algoStart=System.nanoTime();
 		try {
 			FileReader fileReader = new FileReader(inputFile);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			while (bufferedReader.read(cBuf, 0, 2) != -1) {
+				algoStart=System.nanoTime();
 				sBuf = String.valueOf(cBuf);
-//				columnNumberCounter+=2;
-//				if(sBuf.contains("\n")){
-//					lineNumberCounter++;
-//					columnNumberCounter=1;
-//				}
-//				System.out.println("ME SEARCH: "+sBuf+"@L"+lineNumberCounter+"C"+columnNumberCounter);
+				
+				columnNumberCounter+=2;
+				if(sBuf.equals("\n")){
+					lineNumberCounter++;
+					columnNumberCounter=1;
+				}
+
 				while (goTo(currState, sBuf)==null&&!currState.equals(root)) { //repeat fail function as long goTo function is failing
+					try {
+						if(sBuf.length()==2)
+							prepareOutputFail(currState.getNextStateCollection().get(Character.toString(cBuf[0])), lineNumberCounter, columnNumberCounter);
+					} catch (Exception e) {}
+					
 					currState= failFrom(currState);
 				}
 				if(goTo(currState, sBuf)!=null){
+					try {
+						if(sBuf.length()==2)
+							prepareOutputSuccess(currState.getNextStateCollection().get(Character.toString(cBuf[0])), lineNumberCounter, columnNumberCounter);// tadinya buat cetak yang ke skip tapi malah kena yang emang cuman 1 input.
+					} catch (Exception e) {}
 					currState = goTo(currState, sBuf); //set the current node to the result of go to function
-					prepareOutput(currState,lineNumberCounter, columnNumberCounter);
-//					System.out.println("FOUND ME A: "+sBuf+"@L"+lineNumberCounter+"C"+columnNumberCounter);
+					try {
+//						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
+						prepareOutputSuccess(currState, lineNumberCounter, columnNumberCounter);
+					} catch (Exception e) {}
+//					System.out.println("input: "+inputStringBuffer);
+				}else if(goTo(currState, sBuf)==null&&currState.equals(root)){	//shifting enforcer
+					try {
+						currState = goTo(currState, Character.toString(cBuf[1])); //set the current node to the result of go to function
+//						prepareOutput(currState, lineNumberCounter, columnNumberCounter, AhoCorasick.SUPPORTSKIPPEDNODEFORSUCCESS);
+						prepareOutputSuccess(currState, lineNumberCounter, columnNumberCounter);
+					} catch (Exception e) {
+						currState = root;
+					}
 				}
+				algoEnd = System.nanoTime();
+				ahoCorasickTimeTotal+=(algoEnd-algoStart);
 			}
 			fileReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		algoEnd = System.nanoTime();
-		Utility.writeAhoCorasickTime(algoEnd-algoStart);
-	}
-
-	/**prepare output for the matching keywords found*/
-	private void prepareOutput(State state,int lineNumber, int endColumnNumber){
-		if(state.getFullKeywordHashCodeList()!=null){//jika currNode = fullword
-			for (Integer keywordHashCode : state.getFullKeywordHashCodeList()) {
-				if(keywordHashCode!=null)outputList.add(new Output(keywordHashCode, lineNumber, endColumnNumber));
-			}
-		}
+//		algoEnd = System.nanoTime();
+//		Utility.writeAhoCorasickTime(algoEnd-algoStart);
+		Utility.writeAhoCorasickTime(ahoCorasickTimeTotal);
 		
-		while(!failFrom(state).equals(root)){//jika state tersebut punya fail node yang bukan root
-			state = failFrom(state);
-			if(state.getFullKeywordHashCodeList()!=null){//jika currNode = fullword
-				for (Integer keywordHashCode : state.getFullKeywordHashCodeList()) {
-					if(keywordHashCode!=null)outputList.add(new Output(keywordHashCode, lineNumber, endColumnNumber));
-				}
-			}
+	}
+	
+	/**prepare output for the matching keywords found*/
+	private void prepareOutputFail(State state,int lineNumber, int endColumnNumber){
+		if(state.getFullKeywordHashCode()!=null){//jika currNode = fullword
+			outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
 		}
 	}
 	
-//	/**prepare output for the matching keywords found*/
-//	private void prepareOutputFail(State state,int lineNumber, int endColumnNumber){
-//		if(state.getFullKeywordHashCode()!=null){//jika currNode = fullword
-//			outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
-//		}
-//	}
-//	
-//	/**prepare output for the matching keywords found*/
-//	private void prepareOutputSuccess(State state,int lineNumber, int endColumnNumber){
-//		if(state.getFullKeywordHashCode()!=null){//jika currNode = fullword
-//			outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
-//		}
-//		while(!failFrom(state).equals(root)){//jika state tersebut punya fail node yang bukan root
-//			state = failFrom(state);
-//			if(state.getFullKeywordHashCode()!=null){//jika failState == fullword
-//				outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
-//			}
-//		}
-//	}
-
-	public void trieInsight(String initialStateChara){
-		State initialState = root.getNextStateCollection().get(initialStateChara);
-		System.out.print(initialState.getStateContentCharacter()+": ");
-		for (String key : initialState.getNextStateCollection().keySet()) {
-			System.out.print(key+",");
+	/**prepare output for the matching keywords found*/
+	private void prepareOutputSuccess(State state,int lineNumber, int endColumnNumber){
+		if(state.getFullKeywordHashCode()!=null){//jika currNode = fullword
+			outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
 		}
-		
+		while(!failFrom(state).equals(root)){//jika state tersebut punya fail node yang bukan root
+			state = failFrom(state);
+			if(state.getFullKeywordHashCode()!=null){//jika failState == fullword
+				outputList.add(new Output(state.getFullKeywordHashCode(), lineNumber, endColumnNumber));
+			}
+		}
 	}
 	
 }

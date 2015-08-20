@@ -22,7 +22,7 @@ public class State {
 	}
 
 	/**Called each time a new state is created*/
-	public State(String stateContentCharacter, State failState){
+	public State(State parent, String stateContentCharacter, State failState){
 		super();
 		this.stateContentCharacter = stateContentCharacter;
 		this.failState = failState;
